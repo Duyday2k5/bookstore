@@ -15,6 +15,7 @@ const LoginPage = () => {
         const res = await callLogin(username, password);
         setIsSubmit(false);
         if (res?.data) {
+            localStorage.setItem('access_token', res.data.access_token)
             message.success('Đăng nhập tài khoản thành công!');
             navigate('/')
         } else {
