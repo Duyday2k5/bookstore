@@ -64,7 +64,7 @@ const RegisterPage = () => {
                             <Form.Item
                             // wrapperCol={{ offset: 6, span: 16 }}
                             >
-                                <Button type="primary" htmlType="submit" loading={true}>
+                                <Button type="primary" htmlType="submit" loading={false}>
                                     Đăng ký
                                 </Button>
                             </Form.Item>
