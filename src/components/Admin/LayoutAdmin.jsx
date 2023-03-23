@@ -111,7 +111,7 @@ const LayoutAdmin = () => {
                     <Outlet />
                 </Content>
                 <Footer style={{ padding: 0 }}>
-                    &copy; 2023. Made with <HeartTwoTone />
+                    React Test Fresher &copy; Hỏi Dân IT - Made with <HeartTwoTone />
                 </Footer>
             </Layout>
         </Layout>
