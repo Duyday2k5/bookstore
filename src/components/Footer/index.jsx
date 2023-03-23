@@ -1,9 +1,10 @@
+import './footer.scss';
 
 const Footer = () => {
     return (
-        <>
-            footer
-        </>
+        <footer>
+            <div>React bla bla &copy;2023 by abc</div>
+        </footer>
     )
 }
 
