@@ -31,32 +31,14 @@ const Layout = () => {
   )
 }
 
-// const LayoutAdmin = () => {
-//   const isAdminRoute = window.location.pathname.startsWith('/admin');
-//   const user = useSelector(state => state.account.user);
-//   const userRole = user.role;
-
-//   return (
-//     <div className='layout-app'>
-//       {isAdminRoute && userRole === 'ADMIN' && <Header />}
-//       {/* <Header /> */}
-//       <Outlet />
-//       {/* <Footer /> */}
-//       {isAdminRoute && userRole === 'ADMIN' && <Footer />}
-
-//     </div>
-//   )
-// }
-
 export default function App() {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(state => state.account.isAuthenticated)
+  const isLoading = useSelector(state => state.account.isLoading)
 
   const getAccount = async () => {
     if (
       window.location.pathname === '/login'
       || window.location.pathname === '/register'
-      || window.location.pathname === '/'
     )
       return;
 
@@ -122,11 +104,10 @@ export default function App() {
     },
   ]);
 
-
   return (
     <>
       {
-        isAuthenticated === true
+        isLoading === false
           || window.location.pathname === '/login'
           || window.location.pathname === '/register'
           || window.location.pathname === '/'

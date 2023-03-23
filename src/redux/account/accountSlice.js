@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     isAuthenticated: false,
+    isLoading: true,
     user: {
         email: "",
         phone: "",
@@ -24,6 +25,7 @@ export const accountSlide = createSlice({
             // which detects changes to a "draft state" and produces a brand new
             // immutable state based off those changes
             state.isAuthenticated = true;
+            state.isLoading = false;
             state.user = action.payload;
         },
         doGetAccountAction: (state, action) => {
@@ -32,7 +34,21 @@ export const accountSlide = createSlice({
             // which detects changes to a "draft state" and produces a brand new
             // immutable state based off those changes
             state.isAuthenticated = true;
+            state.isLoading = false;
             state.user = action.payload.user;
+        },
+
+        doLogoutAction: (state, action) => {
+            localStorage.removeItem('access_token');
+            state.isAuthenticated = false;
+            state.user = {
+                email: "",
+                phone: "",
+                fullName: "",
+                role: "",
+                avatar: "",
+                id: ""
+            }
         },
 
     },
@@ -43,7 +59,7 @@ export const accountSlide = createSlice({
     },
 });
 
-export const { doLoginAction, doGetAccountAction } = accountSlide.actions;
+export const { doLoginAction, doGetAccountAction, doLogoutAction } = accountSlide.actions;
 
 
 export default accountSlide.reducer;
