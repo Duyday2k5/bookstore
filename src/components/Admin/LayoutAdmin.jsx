@@ -127,11 +127,11 @@ const LayoutAdmin = () => {
                         </a>
                     </Dropdown>
                 </div>
-                <Content>
+                <Content style={{ padding: '15px' }}>
                     <Outlet />
                 </Content>
                 <Footer style={{ padding: 0 }}>
-                    React Test Fresher &copy; Hỏi Dân IT - Made with <HeartTwoTone />
+                    {/* React Test Fresher &copy; Hỏi Dân IT - Made with <HeartTwoTone /> */}
                 </Footer>
             </Layout>
         </Layout>
