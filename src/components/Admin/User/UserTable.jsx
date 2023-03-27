@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Row, Col, Popconfirm, Button, message, notification } from 'antd';
+import { Table, Row, Col, Popconfirm, Button, message, notification, Divider } from 'antd';
 import InputSearch from './InputSearch';
 import { callDeleteUser, callFetchListUser } from '../../../services/api';
-import { DeleteTwoTone } from '@ant-design/icons';
+import { CloudDownloadOutlined, CloudUploadOutlined, DeleteTwoTone, ExportOutlined, ImportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 // https://stackblitz.com/run?file=demo.tsx
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -68,8 +68,6 @@ const UserTable = () => {
         }
     ];
 
-
-
     const onChange = (pagination, filters, sorter, extra) => {
         if (pagination && pagination.current !== current) {
             setCurrent(pagination.current)
@@ -94,6 +92,37 @@ const UserTable = () => {
         }
     };
 
+
+    // change button color: https://ant.design/docs/react/customize-theme#customize-design-token
+    const renderHeader = () => {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>Table List Users</span>
+                <span style={{ display: 'flex', gap: 15 }}>
+                    <Button
+                        icon={<ExportOutlined />}
+                        type="primary"
+                    >Export</Button>
+
+                    <Button
+                        icon={<CloudUploadOutlined />}
+                        type="primary"
+                    >Import</Button>
+
+                    <Button
+                        icon={<PlusOutlined />}
+                        type="primary"
+                    >Thêm mới</Button>
+                    <Button type='ghost'>
+                        <ReloadOutlined />
+                    </Button>
+
+
+                </span>
+            </div>
+        )
+    }
+
     return (
         <>
             <Row gutter={[20, 20]}>
@@ -102,7 +131,7 @@ const UserTable = () => {
                 </Col>
                 <Col span={24}>
                     <Table
-                        className='def'
+                        title={renderHeader}
                         columns={columns}
                         dataSource={listUser}
                         onChange={onChange}
