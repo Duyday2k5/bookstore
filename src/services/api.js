@@ -20,3 +20,7 @@ export const callFetchListUser = (query) => {
     // current=1&pageSize=3
     return axios.get(`/api/v1/user?${query}`)
 }
+
+export const callDeleteUser = (id) => {
+    return axios.delete(`/api/v1/user/${id}`)
+}
