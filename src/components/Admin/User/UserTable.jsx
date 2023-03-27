@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Row, Col, Popconfirm, Button, message, notification, Divider } from 'antd';
+import { Table, Row, Col, Popconfirm, Button, message, notification } from 'antd';
 import InputSearch from './InputSearch';
 import { callDeleteUser, callFetchListUser } from '../../../services/api';
-import { CloudDownloadOutlined, CloudUploadOutlined, DeleteTwoTone, ExportOutlined, ImportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, DeleteTwoTone, ExportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import UserModalCreate from './UserModalCreate';
+import UserViewDetail from './UserViewDetail';
+
 // https://stackblitz.com/run?file=demo.tsx
 const UserTable = () => {
     const [listUser, setListUser] = useState([]);
@@ -14,6 +17,9 @@ const UserTable = () => {
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("");
 
+    const [openModalCreate, setOpenModalCreate] = useState(false);
+    const [openViewDetail, setOpenViewDetail] = useState(false);
+    const [dataViewDetail, setDataViewDetail] = useState(null);
 
     // useEffect(() => {
     //     fetchUser();
@@ -45,6 +51,14 @@ const UserTable = () => {
         {
             title: 'Id',
             dataIndex: '_id',
+            render: (text, record, index) => {
+                return (
+                    <a href='#' onClick={() => {
+                        setDataViewDetail(record);
+                        setOpenViewDetail(true);
+                    }}>{record._id}</a>
+                )
+            }
         },
         {
             title: 'Tên hiển thị',
@@ -129,6 +143,7 @@ const UserTable = () => {
                     <Button
                         icon={<PlusOutlined />}
                         type="primary"
+                        onClick={() => setOpenModalCreate(true)}
                     >Thêm mới</Button>
                     <Button type='ghost' onClick={() => {
                         setFilter("");
@@ -176,6 +191,17 @@ const UserTable = () => {
                     />
                 </Col>
             </Row>
+            <UserModalCreate
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+            />
+
+            <UserViewDetail
+                openViewDetail={openViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
+                dataViewDetail={dataViewDetail}
+                setDataViewDetail={setDataViewDetail}
+            />
         </>
     )
 }
