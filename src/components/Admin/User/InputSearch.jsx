@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Input, Row, theme } from 'antd';
 
-const AdvancedSearchForm = () => {
+const InputSearch = (props) => {
     const { token } = theme.useToken();
     const [form] = Form.useForm();
 
@@ -13,7 +13,36 @@ const AdvancedSearchForm = () => {
     };
 
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        let query = "";
+        //build query
+        if (values.fullName) {
+            query += `&fullName=/${values.fullName}/i`
+        }
+        if (values.email) {
+            query += `&email=/${values.email}/i`
+        }
+
+        if (values.phone) {
+            query += `&phone=/${values.phone}/i`
+        }
+
+        if (query) {
+            props.handleSearch(query);
+        }
+
+        //remove undefined
+        // https://stackoverflow.com/questions/25421233/javascript-removing-undefined-fields-from-an-object
+        // Object.keys(values).forEach(key => {
+        //     if (values[key] === undefined) {
+        //         delete values[key];
+        //     }
+        // });
+
+        // if (values && Object.keys(values).length > 0) {
+        //     // https://stackoverflow.com/questions/1714786/query-string-encoding-of-a-javascript-object
+        //     const params = new URLSearchParams(values).toString();
+        //     props.handleSearch(params);
+        // }
     };
 
     return (
@@ -21,30 +50,30 @@ const AdvancedSearchForm = () => {
             <Row gutter={24}>
                 <Col span={8}>
                     <Form.Item
-                        labelCol={{ span: 24 }} //whole column
+                        labelCol={{ span: 24 }}
                         name={`fullName`}
                         label={`Name`}
                     >
-                        <Input placeholder="placeholder" />
+                        <Input />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item
-                        labelCol={{ span: 24 }} //whole column
+                        labelCol={{ span: 24 }}
                         name={`email`}
                         label={`Email`}
                     >
-                        <Input placeholder="placeholder" />
+                        <Input />
                     </Form.Item>
                 </Col>
 
                 <Col span={8}>
                     <Form.Item
-                        labelCol={{ span: 24 }} //whole column
+                        labelCol={{ span: 24 }}
                         name={`phone`}
                         label={`Số điện thoại`}
                     >
-                        <Input placeholder="placeholder" />
+                        <Input />
                     </Form.Item>
                 </Col>
             </Row>
@@ -75,14 +104,5 @@ const AdvancedSearchForm = () => {
     );
 };
 
-// https://stackblitz.com/run?file=demo.tsx
-// https://ant.design/components/form
-const InputSearch = () => {
-    return (
-        <div>
-            <AdvancedSearchForm />
-        </div>
-    );
-};
 
 export default InputSearch;
