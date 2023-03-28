@@ -8,6 +8,7 @@ import UserViewDetail from './UserViewDetail';
 import moment from 'moment/moment';
 import { FORMAT_DATE_DISPLAY } from '../../../utils/constant';
 import UserImport from './data/UserImport';
+import * as XLSX from 'xlsx';
 
 // https://stackblitz.com/run?file=demo.tsx
 const UserTable = () => {
@@ -150,6 +151,7 @@ const UserTable = () => {
                     <Button
                         icon={<ExportOutlined />}
                         type="primary"
+                        onClick={() => handleExportData()}
                     >Export</Button>
 
                     <Button
@@ -180,6 +182,15 @@ const UserTable = () => {
         setFilter(query);
     }
 
+    const handleExportData = () => {
+        // https://stackoverflow.com/questions/70871254/how-can-i-export-a-json-object-to-excel-using-nextjs-react
+        if (listUser.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(listUser);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            XLSX.writeFile(workbook, "ExportUser.csv");
+        }
+    }
     return (
         <>
             <Row gutter={[20, 20]}>
