@@ -2,61 +2,52 @@ import { Badge, Descriptions, Divider, Drawer, Modal, Upload } from "antd";
 import moment from 'moment';
 import { FORMAT_DATE_DISPLAY } from "../../../utils/constant";
 //FORMAT_DATE_DISPLAY = 'DD-MM-YYYY HH:mm:ss'
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 const BookViewDetail = (props) => {
     const { openViewDetail, setOpenViewDetail, dataViewDetail, setDataViewDetail } = props;
-
     const onClose = () => {
         setOpenViewDetail(false);
         setDataViewDetail(null);
     }
 
-    const getBase64 = (file) =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
-    const [fileList, setFileList] = useState([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-2',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-3',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-4',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+
+    const [fileList, setFileList] = useState([]);
+
+    useEffect(() => {
+        if (dataViewDetail) {
+            let imgThumbnail = {}, imgSlider = [];
+            if (dataViewDetail.thumbnail) {
+                imgThumbnail = {
+                    uid: uuidv4(),
+                    name: dataViewDetail.thumbnail,
+                    status: 'done',
+                    url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataViewDetail.thumbnail}`,
+                }
+            }
+            if (dataViewDetail.slider && dataViewDetail.slider.length > 0) {
+                dataViewDetail.slider.map(item => {
+                    imgSlider.push({
+                        uid: uuidv4(),
+                        name: item,
+                        status: 'done',
+                        url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${item}`,
+                    })
+                })
+            }
+
+            setFileList([imgThumbnail, ...imgSlider])
         }
-    ]);
+    }, dataViewDetail)
 
     const handleCancel = () => setPreviewOpen(false);
 
     const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-        setPreviewImage(file.url || (file.preview));
+        setPreviewImage(file.url);
         setPreviewOpen(true);
         setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
     };
@@ -64,8 +55,6 @@ const BookViewDetail = (props) => {
     const handleChange = ({ fileList: newFileList }) => {
         setFileList(newFileList);
     }
-
-
 
 
     return (
