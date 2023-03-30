@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Divider, Form, Input, InputNumber, message, Modal, notification, Row, Select, Upload } from 'antd';
-import { callCreateAUser, callFetchCategory } from '../../../services/api';
+import { Col, Divider, Form, Input, InputNumber, message, Modal, notification, Row, Select, Upload } from 'antd';
+import { callCreateAUser, callFetchCategory, callUploadBookImg } from '../../../services/api';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 const BookModalCreate = (props) => {
     const { openModalCreate, setOpenModalCreate } = props;
@@ -14,6 +14,13 @@ const BookModalCreate = (props) => {
     const [loadingSlider, setLoadingSlider] = useState(false);
 
     const [imageUrl, setImageUrl] = useState("");
+
+    const [dataThumbnail, setDataThumbnail] = useState([])
+    const [dataSlider, setDataSlider] = useState([])
+
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState('');
+    const [previewTitle, setPreviewTitle] = useState('');
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -30,6 +37,11 @@ const BookModalCreate = (props) => {
 
 
     const onFinish = async (values) => {
+        console.log(">>> check values: ", values);
+        console.log(">>> check data thumbnail: ", dataThumbnail);
+        console.log(">>> check data slider: ", dataSlider);
+
+        return;
         const { fullName, password, email, phone } = values;
         setIsSubmit(true)
         const res = await callCreateAUser(fullName, password, email, phone);
@@ -66,8 +78,6 @@ const BookModalCreate = (props) => {
         return isJpgOrPng && isLt2M;
     };
 
-
-
     const handleChange = (info, type) => {
         if (info.file.status === 'uploading') {
             type ? setLoadingSlider(true) : setLoading(true);
@@ -83,12 +93,50 @@ const BookModalCreate = (props) => {
     };
 
 
-    const handleUploadFile = ({ file, onSuccess, onError }) => {
-        setTimeout(() => {
-            onSuccess("ok");
-        }, 1000);
+    const handleUploadFileThumbnail = async ({ file, onSuccess, onError }) => {
+        const res = await callUploadBookImg(file);
+        if (res && res.data) {
+            setDataThumbnail([{
+                name: res.data.fileUploaded,
+                uid: file.uid
+            }])
+            onSuccess('ok')
+        } else {
+            onError('Đã có lỗi khi upload file');
+        }
     };
 
+    const handleUploadFileSlider = async ({ file, onSuccess, onError }) => {
+        const res = await callUploadBookImg(file);
+        if (res && res.data) {
+            //copy previous state => upload multiple images
+            setDataSlider((dataSlider) => [...dataSlider, {
+                name: res.data.fileUploaded,
+                uid: file.uid
+            }])
+            onSuccess('ok')
+        } else {
+            onError('Đã có lỗi khi upload file');
+        }
+    };
+
+    const handleRemoveFile = (file, type) => {
+        if (type === 'thumbnail') {
+            setDataThumbnail([])
+        }
+        if (type === 'slider') {
+            const newSlider = dataSlider.filter(x => x.uid !== file.uid);
+            setDataSlider(newSlider);
+        }
+    }
+
+    const handlePreview = async (file) => {
+        getBase64(file.originFileObj, (url) => {
+            setPreviewImage(url);
+            setPreviewOpen(true);
+            setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+        });
+    };
 
     return (
         <>
@@ -97,7 +145,10 @@ const BookModalCreate = (props) => {
                 title="Thêm mới book"
                 open={openModalCreate}
                 onOk={() => { form.submit() }}
-                onCancel={() => setOpenModalCreate(false)}
+                onCancel={() => {
+                    form.resetFields();
+                    setOpenModalCreate(false)
+                }}
                 okText={"Tạo mới"}
                 cancelText={"Hủy"}
                 confirmLoading={isSubmit}
@@ -198,9 +249,11 @@ const BookModalCreate = (props) => {
                                     className="avatar-uploader"
                                     maxCount={1}
                                     multiple={false}
-                                    customRequest={handleUploadFile}
+                                    customRequest={handleUploadFileThumbnail}
                                     beforeUpload={beforeUpload}
                                     onChange={handleChange}
+                                    onRemove={(file) => handleRemoveFile(file, "thumbnail")}
+                                    onPreview={handlePreview}
                                 >
                                     <div>
                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -221,9 +274,11 @@ const BookModalCreate = (props) => {
                                     name="slider"
                                     listType="picture-card"
                                     className="avatar-uploader"
-                                    customRequest={handleUploadFile}
+                                    customRequest={handleUploadFileSlider}
                                     beforeUpload={beforeUpload}
                                     onChange={(info) => handleChange(info, 'slider')}
+                                    onRemove={(file) => handleRemoveFile(file, "slider")}
+                                    onPreview={handlePreview}
                                 >
                                     <div>
                                         {loadingSlider ? <LoadingOutlined /> : <PlusOutlined />}
@@ -234,6 +289,9 @@ const BookModalCreate = (props) => {
                         </Col>
                     </Row>
                 </Form>
+            </Modal>
+            <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={() => setPreviewOpen(false)}>
+                <img alt="example" style={{ width: '100%' }} src={previewImage} />
             </Modal>
         </>
     );
