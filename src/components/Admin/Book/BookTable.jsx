@@ -101,6 +101,7 @@ const BookTable = () => {
         },
         {
             title: 'Action',
+            width: 100,
             render: (text, record, index) => {
                 return (
                     <>
