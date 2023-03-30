@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Divider, Form, Input, InputNumber, message, Modal, notification, Row, Select, Upload } from 'antd';
-import { callCreateAUser, callFetchCategory, callUploadBookImg } from '../../../services/api';
+import { callCreateAUser, callCreateBook, callFetchCategory, callUploadBookImg } from '../../../services/api';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 const BookModalCreate = (props) => {
     const { openModalCreate, setOpenModalCreate } = props;
@@ -37,17 +37,34 @@ const BookModalCreate = (props) => {
 
 
     const onFinish = async (values) => {
-        console.log(">>> check values: ", values);
-        console.log(">>> check data thumbnail: ", dataThumbnail);
-        console.log(">>> check data slider: ", dataSlider);
+        if (dataThumbnail.length === 0) {
+            notification.error({
+                message: 'Lỗi validate',
+                description: 'Vui lòng upload ảnh thumbnail'
+            })
+            return;
+        }
 
-        return;
-        const { fullName, password, email, phone } = values;
+        if (dataSlider.length === 0) {
+            notification.error({
+                message: 'Lỗi validate',
+                description: 'Vui lòng upload ảnh slider'
+            })
+            return;
+        }
+
+
+        const { mainText, author, price, sold, quantity, category } = values;
+        const thumbnail = dataThumbnail[0].name;
+        const slider = dataSlider.map(item => item.name);
+
         setIsSubmit(true)
-        const res = await callCreateAUser(fullName, password, email, phone);
+        const res = await callCreateBook(thumbnail, slider, mainText, author, price, sold, quantity, category);
         if (res && res.data) {
-            message.success('Tạo mới user thành công');
+            message.success('Tạo mới book thành công');
             form.resetFields();
+            setDataSlider([]);
+            setDataThumbnail([])
             setOpenModalCreate(false);
             await props.fetchBook()
         } else {
