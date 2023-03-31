@@ -54,6 +54,12 @@ export const callCreateBook = (thumbnail, slider, mainText, author, price, sold,
     })
 }
 
+export const callUpdateBook = (id, thumbnail, slider, mainText, author, price, sold, quantity, category) => {
+    return axios.put(`/api/v1/book/${id}`, {
+        thumbnail, slider, mainText, author, price, sold, quantity, category
+    })
+}
+
 export const callUploadBookImg = (fileImg) => {
     const bodyFormData = new FormData();
     bodyFormData.append('fileImg', fileImg);
@@ -69,5 +75,5 @@ export const callUploadBookImg = (fileImg) => {
 }
 
 export const callDeleteBook = (id) => {
-    return axios.delete(`/api/v1/book/${id}`)
+    return axios.delete(`/api/v1/book/${id}`);
 }
