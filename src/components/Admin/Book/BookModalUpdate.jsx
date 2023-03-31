@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Divider, Form, Input, InputNumber, message, Modal, notification, Row, Select, Upload } from 'antd';
-import { callCreateBook, callFetchCategory, callUploadBookImg } from '../../../services/api';
+import { callFetchCategory, callUpdateBook, callUploadBookImg } from '../../../services/api';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -99,17 +99,18 @@ const BookModalUpdate = (props) => {
         }
 
 
-        const { mainText, author, price, sold, quantity, category } = values;
+        const { _id, mainText, author, price, sold, quantity, category } = values;
         const thumbnail = dataThumbnail[0].name;
         const slider = dataSlider.map(item => item.name);
 
         setIsSubmit(true)
-        const res = await callCreateBook(thumbnail, slider, mainText, author, price, sold, quantity, category);
+        const res = await callUpdateBook(_id, thumbnail, slider, mainText, author, price, sold, quantity, category);
         if (res && res.data) {
-            message.success('Tạo mới book thành công');
+            message.success('Cập nhật book thành công');
             form.resetFields();
             setDataSlider([]);
-            setDataThumbnail([])
+            setDataThumbnail([]);
+            setInitForm(null);
             setOpenModalUpdate(false);
             await props.fetchBook()
         } else {
@@ -209,7 +210,7 @@ const BookModalUpdate = (props) => {
     return (
         <>
             <Modal
-                title="Thêm mới book"
+                title="Cập nhật book"
                 open={openModalUpdate}
                 onOk={() => { form.submit() }}
                 onCancel={() => {
@@ -218,7 +219,7 @@ const BookModalUpdate = (props) => {
                     setDataUpdate(null);
                     setOpenModalUpdate(false)
                 }}
-                okText={"Tạo mới"}
+                okText={"Cập nhật"}
                 cancelText={"Hủy"}
                 confirmLoading={isSubmit}
                 width={"50vw"}
@@ -234,6 +235,17 @@ const BookModalUpdate = (props) => {
                     autoComplete="off"
                 >
                     <Row gutter={15}>
+                        <Col hidden>
+                            <Form.Item
+                                hidden
+                                labelCol={{ span: 24 }}
+                                label="Tên sách"
+                                name="_id"
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+
                         <Col span={12}>
                             <Form.Item
                                 labelCol={{ span: 24 }}
@@ -302,7 +314,7 @@ const BookModalUpdate = (props) => {
                                 name="sold"
                                 rules={[{ required: true, message: 'Vui lòng nhập số lượng đã bán!' }]}
                             >
-                                <InputNumber min={0} defaultValue={0} style={{ width: '100%' }} />
+                                <InputNumber min={0} disabled style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
