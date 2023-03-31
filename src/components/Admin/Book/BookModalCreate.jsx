@@ -76,7 +76,6 @@ const BookModalCreate = (props) => {
         setIsSubmit(false)
     };
 
-
     const getBase64 = (img, callback) => {
         const reader = new FileReader();
         reader.addEventListener('load', () => callback(reader.result));
