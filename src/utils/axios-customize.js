@@ -52,8 +52,12 @@ instance.interceptors.response.use(function (response) {
         && +error.response.status === 400
         && error.config.url === '/api/v1/auth/refresh'
     ) {
-        if (window.location.pathname !== '/')
+        if (
+            window.location.pathname !== '/'
+            && !window.location.pathname.startsWith('/book')
+        ) {
             window.location.href = '/login';
+        }
     }
 
     return error?.response?.data ?? Promise.reject(error);
