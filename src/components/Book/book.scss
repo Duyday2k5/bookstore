@@ -1,0 +1,24 @@
+@import "react-image-gallery/styles/scss/image-gallery.scss";
+
+.view-detail-book {
+
+    .original-image,
+    .thumbnail-image {
+        cursor: pointer;
+    }
+}
+
+.modal-gallery {
+    .active {
+        border: 2px solid #ee4d2d;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        box-sizing: border-box;
+        top: 0;
+    }
+
+    .img-normal {
+        cursor: pointer;
+    }
+}
