@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { callFetchCategory, callFetchListBook } from '../../services/api';
 import './home.scss';
+import MobileFilter from './MobileFilter';
 const Home = () => {
 
     const [listCategory, setListCategory] = useState([]);
@@ -16,6 +17,8 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("sort=-sold");
+
+    const [showMobileFilter, setShowMobileFilter] = useState(false);
 
     const [form] = Form.useForm();
     const navigate = useNavigate();
@@ -282,6 +285,16 @@ const Home = () => {
                                         onChange={(value) => { setSortQuery(value) }}
                                         style={{ overflowX: "auto" }}
                                     />
+                                    <Col xs={24} md={0}>
+                                        <div style={{ marginBottom: 20 }} >
+                                            <span onClick={() => setShowMobileFilter(true)}>
+                                                <FilterTwoTone />
+                                                <span style={{ fontWeight: 500 }}> Lọc</span>
+                                            </span>
+
+                                        </div>
+                                    </Col>
+                                    <br />
                                 </Row>
                                 <Row className='customize-row'>
                                     {listBook?.map((item, index) => {
@@ -319,8 +332,14 @@ const Home = () => {
                             </div>
                         </Spin>
                     </Col>
-
                 </Row>
+                <MobileFilter
+                    isOpen={showMobileFilter}
+                    setIsOpen={setShowMobileFilter}
+                    handleChangeFilter={handleChangeFilter}
+                    listCategory={listCategory}
+                    onFinish={onFinish}
+                />
             </div>
         </div>
     )
