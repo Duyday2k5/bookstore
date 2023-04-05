@@ -45,7 +45,7 @@
         display: flex;
         align-items: center;
 
-        .right {
+        .right-side {
             display: flex;
 
             input {
@@ -85,7 +85,7 @@
         }
     }
 
-    .left {
+    .left-side {
         color: #757575;
         width: 110px;
         text-transform: capitalize;
