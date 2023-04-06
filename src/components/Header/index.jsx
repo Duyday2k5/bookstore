@@ -11,6 +11,7 @@ import { callLogout } from '../../services/api';
 import './header.scss';
 import { doLogoutAction } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
+import PreviewCart from './PreviewCart';
 
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -76,12 +77,14 @@ const Header = () => {
                     <nav className="page-header__bottom">
                         <ul id="navigation" className="navigation">
                             <li className="navigation__item">
-                                <Badge
-                                    count={carts?.length ?? 0}
-                                    size={"small"}
-                                >
-                                    <FiShoppingCart className='icon-cart' />
-                                </Badge>
+                                <PreviewCart >
+                                    <Badge
+                                        count={carts?.length ?? 0}
+                                        size={"small"}
+                                    >
+                                        <FiShoppingCart className='icon-cart' />
+                                    </Badge>
+                                </PreviewCart>
                             </li>
                             <li className="navigation__item mobile"><Divider type='vertical' /></li>
                             <li className="navigation__item mobile">
