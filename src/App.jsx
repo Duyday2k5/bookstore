@@ -20,6 +20,7 @@ import AdminPage from './pages/admin';
 import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import './styles/reset.scss';
+import './styles/global.scss';
 import ManageUserPage from './pages/admin/user';
 import ManageBookPage from './pages/admin/book';
 

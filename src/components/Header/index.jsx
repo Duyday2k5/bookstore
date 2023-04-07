@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaReact } from 'react-icons/fa'
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, message, Avatar } from 'antd';
+import { Divider, Badge, Drawer, message, Avatar, Popover } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
@@ -11,7 +11,6 @@ import { callLogout } from '../../services/api';
 import './header.scss';
 import { doLogoutAction } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
-import PreviewCart from './PreviewCart';
 
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
@@ -53,6 +52,27 @@ const Header = () => {
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
+    const contentPopover = () => {
+        return (
+            <div className='pop-cart-body'>
+                <div className='pop-cart-content'>
+                    <div className='book'>
+                        <img src='https://picsum.photos/id/1015/250/150/' />
+                        <div>Đại Việt Sử Ký Toàn Thư Trọn Bộ</div>
+                        <div>1555.555 đ</div>
+                    </div>
+                    <div className='book'>
+                        <img src='https://picsum.photos/id/1015/250/150/' />
+                        <div>Đại Việt Sử Ký Toàn Thư Trọn Bộ</div>
+                        <div>1555.555 đ</div>
+                    </div>
+                </div>
+                <div className='pop-cart-footer'>
+                    <button>Xem giỏ hàng</button>
+                </div>
+            </div>
+        )
+    }
     return (
         <>
             <div className='header-container'>
@@ -77,14 +97,21 @@ const Header = () => {
                     <nav className="page-header__bottom">
                         <ul id="navigation" className="navigation">
                             <li className="navigation__item">
-                                <PreviewCart >
+                                <Popover
+                                    className="popover-carts"
+                                    placement="topRight"
+                                    rootClassName="popover-carts"
+                                    title={"Sản phẩm mới thêm"}
+                                    content={contentPopover}
+                                    arrow={true}>
                                     <Badge
                                         count={carts?.length ?? 0}
                                         size={"small"}
+                                        showZero
                                     >
                                         <FiShoppingCart className='icon-cart' />
                                     </Badge>
-                                </PreviewCart>
+                                </Popover>
                             </li>
                             <li className="navigation__item mobile"><Divider type='vertical' /></li>
                             <li className="navigation__item mobile">
