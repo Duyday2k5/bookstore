@@ -20,11 +20,7 @@ const BookPage = () => {
             let raw = res.data;
             //process data
             raw.items = getImages(raw);
-
-            setTimeout(() => {
-                setDataBook(raw);
-            }, 3000)
-
+            setDataBook(raw);
         }
     }
 
