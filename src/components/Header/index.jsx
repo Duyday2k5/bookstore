@@ -56,16 +56,17 @@ const Header = () => {
         return (
             <div className='pop-cart-body'>
                 <div className='pop-cart-content'>
-                    <div className='book'>
-                        <img src='https://picsum.photos/id/1015/250/150/' />
-                        <div>Đại Việt Sử Ký Toàn Thư Trọn Bộ</div>
-                        <div>1555.555 đ</div>
-                    </div>
-                    <div className='book'>
-                        <img src='https://picsum.photos/id/1015/250/150/' />
-                        <div>Đại Việt Sử Ký Toàn Thư Trọn Bộ</div>
-                        <div>1555.555 đ</div>
-                    </div>
+                    {carts?.map((book, index) => {
+                        return (
+                            <div className='book' key={`book-${index}`}>
+                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} />
+                                <div>{book?.detail?.mainText}</div>
+                                <div className='price'>
+                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book?.detail?.price ?? 0)}
+                                </div>
+                            </div>
+                        )
+                    })}
                 </div>
                 <div className='pop-cart-footer'>
                     <button>Xem giỏ hàng</button>
