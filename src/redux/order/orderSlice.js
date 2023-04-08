@@ -24,6 +24,9 @@ export const orderSlice = createSlice({
             let isExistIndex = carts.findIndex(c => c._id === item._id);
             if (isExistIndex > -1) {
                 carts[isExistIndex].quantity = carts[isExistIndex].quantity + item.quantity;
+                if (carts[isExistIndex].quantity > carts[isExistIndex].detail.quantity) {
+                    carts[isExistIndex].quantity = carts[isExistIndex].detail.quantity;
+                }
             } else {
                 carts.push({ quantity: item.quantity, _id: item._id, detail: item.detail })
             }
@@ -31,6 +34,27 @@ export const orderSlice = createSlice({
             state.carts = carts;
             message.success("Sản phẩm đã được thêm vào Giỏ hàng")
         },
+
+        doUpdateCartAction: (state, action) => {
+            let carts = state.carts;
+            const item = action.payload;
+
+            let isExistIndex = carts.findIndex(c => c._id === item._id);
+            if (isExistIndex > -1) {
+                carts[isExistIndex].quantity = item.quantity;
+                if (carts[isExistIndex].quantity > carts[isExistIndex].detail.quantity) {
+                    carts[isExistIndex].quantity = carts[isExistIndex].detail.quantity;
+                }
+            } else {
+                carts.push({ quantity: item.quantity, _id: item._id, detail: item.detail })
+            }
+            //update redux
+            state.carts = carts;
+        },
+
+        doDeleteItemCartAction: (state, action) => {
+            state.carts = state.carts.filter(c => c._id !== action.payload._id);
+        }
 
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -40,7 +64,7 @@ export const orderSlice = createSlice({
     },
 });
 
-export const { doAddBookAction } = orderSlice.actions;
+export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction } = orderSlice.actions;
 
 
 export default orderSlice.reducer;

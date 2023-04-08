@@ -1,12 +1,14 @@
 import { Col, Divider, InputNumber, Row } from 'antd';
 import './order.scss';
-import { DeleteOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
+import { DeleteTwoTone } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { doDeleteItemCartAction, doUpdateCartAction } from '../../redux/order/orderSlice';
 
 const ViewOrder = (props) => {
     const carts = useSelector(state => state.order.carts);
     const [totalPrice, setTotalPrice] = useState(0);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (carts && carts.length > 0) {
@@ -15,11 +17,16 @@ const ViewOrder = (props) => {
                 sum += item.quantity * item.detail.price;
             })
             setTotalPrice(sum);
+        } else {
+            setTotalPrice(0);
         }
     }, [carts]);
 
     const handleOnChangeInput = (value, book) => {
-        console.log(">>> check v: ", value)
+        if (!value || value < 1) return;
+        if (!isNaN(value)) {
+            dispatch(doUpdateCartAction({ quantity: value, detail: book, _id: book._id }))
+        }
     }
 
     return (
@@ -47,7 +54,12 @@ const ViewOrder = (props) => {
                                         <div className='sum'>
                                             Tổng:  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * (book?.quantity ?? 0))}
                                         </div>
-                                        <DeleteOutlined />
+                                        <DeleteTwoTone
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => dispatch(doDeleteItemCartAction({ _id: book._id }))}
+                                            twoToneColor="#eb2f96"
+                                        />
+
                                     </div>
                                 </div>
                             )
