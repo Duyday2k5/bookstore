@@ -54,6 +54,10 @@ export const orderSlice = createSlice({
 
         doDeleteItemCartAction: (state, action) => {
             state.carts = state.carts.filter(c => c._id !== action.payload._id);
+        },
+
+        doPlaceOrderAction: (state, action) => {
+            state.carts = [];
         }
 
     },
@@ -64,7 +68,7 @@ export const orderSlice = createSlice({
     },
 });
 
-export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction } = orderSlice.actions;
+export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction, doPlaceOrderAction } = orderSlice.actions;
 
 
 export default orderSlice.reducer;

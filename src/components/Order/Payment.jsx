@@ -1,17 +1,21 @@
 
-import { Checkbox, Col, Divider, InputNumber, Radio, Row } from 'antd';
-import { DeleteTwoTone } from '@ant-design/icons';
+import { Col, Divider, Form, Radio, Row, message, notification } from 'antd';
+import { DeleteTwoTone, LoadingOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { doDeleteItemCartAction, doUpdateCartAction } from '../../redux/order/orderSlice';
+import { doDeleteItemCartAction, doPlaceOrderAction, doUpdateCartAction } from '../../redux/order/orderSlice';
 import { Input } from 'antd';
+import { callPlaceOrder } from '../../services/api';
 const { TextArea } = Input;
 
 const Payment = (props) => {
     const carts = useSelector(state => state.order.carts);
     const [totalPrice, setTotalPrice] = useState(0);
     const dispatch = useDispatch();
-    const [address, setAddress] = useState("")
+    const [isSubmit, setIsSubmit] = useState(false);
+    const user = useSelector(state => state.account.user);
+    const [form] = Form.useForm();
+
 
     useEffect(() => {
         if (carts && carts.length > 0) {
@@ -27,7 +31,45 @@ const Payment = (props) => {
 
 
     const handlePlaceOrder = () => {
+        if (!address) {
+            notification.error({
+                message: "Đã có lỗi xảy ra",
+                description: "Thông tin địa chỉ không được để trống!"
+            })
+            return;
+        }
         props.setCurrentStep(2);
+    }
+
+    const onFinish = async (values) => {
+        setIsSubmit(true);
+        const detailOrder = carts.map(item => {
+            return {
+                bookName: item.detail.mainText,
+                quantity: item.quantity,
+                _id: item._id
+            }
+        })
+        const data = {
+            name: values.name,
+            address: values.address,
+            phone: values.phone,
+            totalPrice: totalPrice,
+            detail: detailOrder
+        }
+
+        const res = await callPlaceOrder(data);
+        if (res && res.data) {
+            message.success('Đặt hàng thành công !');
+            dispatch(doPlaceOrderAction());
+            props.setCurrentStep(2);
+        } else {
+            notification.error({
+                message: "Đã có lỗi xảy ra",
+                description: res.message
+            })
+        }
+        setIsSubmit(false);
     }
 
     return (
@@ -66,32 +108,65 @@ const Payment = (props) => {
             </Col>
             <Col md={8} xs={24} >
                 <div className='order-sum'>
+                    <Form
+                        onFinish={onFinish}
+                        form={form}
+                    >
+                        <Form.Item
+                            style={{ margin: 0 }}
+                            labelCol={{ span: 24 }}
+                            label="Tên người nhận"
+                            name="name"
+                            initialValue={user?.fullName}
+                            rules={[{ required: true, message: 'Tên người nhận không được để trống!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            style={{ margin: 0 }}
+                            labelCol={{ span: 24 }}
+                            label="Số điện thoại"
+                            name="phone"
+                            initialValue={user?.phone}
+                            rules={[{ required: true, message: 'Số điện thoại không được để trống!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            style={{ margin: 0 }}
+                            labelCol={{ span: 24 }}
+                            label="Địa chỉ"
+                            name="address"
+                            rules={[{ required: true, message: 'Địa chỉ không được để trống!' }]}
+                        >
+                            <TextArea
+                                autoFocus
+                                rows={4}
+                            />
+                        </Form.Item>
+                    </Form>
                     <div className='info'>
                         <div className='method'>
                             <div>  Hình thức thanh toán</div>
                             <Radio checked>Thanh toán khi nhận hàng</Radio>
                         </div>
-                        <Divider style={{ margin: "10px 0" }} />
-                        <div className='address'>
-                            <div> Địa chỉ nhận hàng</div>
-                            <TextArea rows={4} />
-                        </div>
                     </div>
-                    <div className='calculate'>
-                        <span>  Tạm tính</span>
-                        <span>
-                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice || 0)}
-                        </span>
-                    </div>
-                    <Divider style={{ margin: "10px 0" }} />
+
+                    <Divider style={{ margin: "5px 0" }} />
                     <div className='calculate'>
                         <span> Tổng tiền</span>
                         <span className='sum-final'>
                             {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice || 0)}
                         </span>
                     </div>
-                    <Divider style={{ margin: "10px 0" }} />
-                    <button onClick={() => handlePlaceOrder()}>Đặt Hàng ({carts?.length ?? 0})</button>
+                    <Divider style={{ margin: "5px 0" }} />
+                    <button
+                        onClick={() => form.submit()}
+                        disabled={isSubmit}
+                    >
+                        {isSubmit && <span><LoadingOutlined /> &nbsp;</span>}
+                        Đặt Hàng ({carts?.length ?? 0})
+                    </button>
                 </div>
             </Col>
         </Row>

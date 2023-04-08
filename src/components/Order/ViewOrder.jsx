@@ -1,4 +1,4 @@
-import { Col, Divider, InputNumber, Row } from 'antd';
+import { Col, Divider, Empty, InputNumber, Row } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -61,6 +61,13 @@ const ViewOrder = (props) => {
                         </div>
                     )
                 })}
+                {carts.length === 0 &&
+                    <div className='order-book-empty'>
+                        <Empty
+                            description={"Không có sản phẩm trong giỏ hàng"}
+                        />
+                    </div>
+                }
             </Col>
             <Col md={6} xs={24} >
                 <div className='order-sum'>
@@ -78,7 +85,12 @@ const ViewOrder = (props) => {
                         </span>
                     </div>
                     <Divider style={{ margin: "10px 0" }} />
-                    <button onClick={() => props.setCurrentStep(1)}>Mua Hàng ({carts?.length ?? 0})</button>
+                    <button
+                        disabled={carts.length === 0}
+                        onClick={() => props.setCurrentStep(1)}
+                    >
+                        Mua Hàng ({carts?.length ?? 0})
+                    </button>
                 </div>
             </Col>
         </Row>
