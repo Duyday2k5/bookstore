@@ -1,13 +1,17 @@
-import { Col, Divider, InputNumber, Row } from 'antd';
+
+import { Checkbox, Col, Divider, InputNumber, Radio, Row } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { doDeleteItemCartAction, doUpdateCartAction } from '../../redux/order/orderSlice';
+import { Input } from 'antd';
+const { TextArea } = Input;
 
-const ViewOrder = (props) => {
+const Payment = (props) => {
     const carts = useSelector(state => state.order.carts);
     const [totalPrice, setTotalPrice] = useState(0);
     const dispatch = useDispatch();
+    const [address, setAddress] = useState("")
 
     useEffect(() => {
         if (carts && carts.length > 0) {
@@ -21,16 +25,14 @@ const ViewOrder = (props) => {
         }
     }, [carts]);
 
-    const handleOnChangeInput = (value, book) => {
-        if (!value || value < 1) return;
-        if (!isNaN(value)) {
-            dispatch(doUpdateCartAction({ quantity: value, detail: book, _id: book._id }))
-        }
+
+    const handlePlaceOrder = () => {
+        props.setCurrentStep(2);
     }
 
     return (
         <Row gutter={[20, 20]}>
-            <Col md={18} xs={24}>
+            <Col md={16} xs={24}>
                 {carts?.map((book, index) => {
                     const currentBookPrice = book?.detail?.price ?? 0;
                     return (
@@ -46,7 +48,7 @@ const ViewOrder = (props) => {
                             </div>
                             <div className='action'>
                                 <div className='quantity'>
-                                    <InputNumber onChange={(value) => handleOnChangeInput(value, book)} value={book.quantity} />
+                                    Số lượng: {book?.quantity}
                                 </div>
                                 <div className='sum'>
                                     Tổng:  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(currentBookPrice * (book?.quantity ?? 0))}
@@ -62,8 +64,19 @@ const ViewOrder = (props) => {
                     )
                 })}
             </Col>
-            <Col md={6} xs={24} >
+            <Col md={8} xs={24} >
                 <div className='order-sum'>
+                    <div className='info'>
+                        <div className='method'>
+                            <div>  Hình thức thanh toán</div>
+                            <Radio checked>Thanh toán khi nhận hàng</Radio>
+                        </div>
+                        <Divider style={{ margin: "10px 0" }} />
+                        <div className='address'>
+                            <div> Địa chỉ nhận hàng</div>
+                            <TextArea rows={4} />
+                        </div>
+                    </div>
                     <div className='calculate'>
                         <span>  Tạm tính</span>
                         <span>
@@ -78,11 +91,11 @@ const ViewOrder = (props) => {
                         </span>
                     </div>
                     <Divider style={{ margin: "10px 0" }} />
-                    <button onClick={() => props.setCurrentStep(1)}>Mua Hàng ({carts?.length ?? 0})</button>
+                    <button onClick={() => handlePlaceOrder()}>Đặt Hàng ({carts?.length ?? 0})</button>
                 </div>
             </Col>
         </Row>
     )
 }
 
-export default ViewOrder;
+export default Payment;
