@@ -24,6 +24,7 @@ import './styles/global.scss';
 import ManageUserPage from './pages/admin/user';
 import ManageBookPage from './pages/admin/book';
 import OrderPage from './pages/order';
+import HistoryPage from './pages/history';
 
 const Layout = () => {
   return (
@@ -74,6 +75,10 @@ export default function App() {
         {
           path: "order",
           element: <OrderPage />,
+        },
+        {
+          path: "history",
+          element: <HistoryPage />,
         },
       ],
     },
