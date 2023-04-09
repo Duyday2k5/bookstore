@@ -1,10 +1,10 @@
 import ViewOrder from "../../components/Order/ViewOrder";
-import { Button, Result, Steps } from 'antd';
+import { Breadcrumb, Button, Result, Steps } from 'antd';
 import './order.scss';
 import { useState } from "react";
 import Payment from "../../components/Order/Payment";
-import { SmileOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { SmileOutlined, HomeOutlined } from "@ant-design/icons";
+import { Link, useNavigate } from "react-router-dom";
 
 const OrderPage = (props) => {
     const [currentStep, setCurrentStep] = useState(0);
@@ -13,6 +13,22 @@ const OrderPage = (props) => {
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
             <div className="order-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
+                <Breadcrumb
+                    style={{ margin: '5px 0' }}
+                    items={[
+                        {
+                            // href: '#',
+                            title: <HomeOutlined />,
+                        },
+                        {
+                            title: (
+                                <Link to={'/'}>
+                                    <span>Trang Chủ</span>
+                                </Link>
+                            ),
+                        }
+                    ]}
+                />
                 <div className="order-steps">
                     <Steps
                         size="small"

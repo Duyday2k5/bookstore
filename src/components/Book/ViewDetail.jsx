@@ -1,14 +1,14 @@
-import { Row, Col, Rate, Divider, Button } from 'antd';
+import { Row, Col, Rate, Divider, Button, Breadcrumb } from 'antd';
 import './book.scss';
 import ImageGallery from 'react-image-gallery';
 import { useRef, useState } from 'react';
 import ModalGallery from './ModalGallery';
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
 import BookLoader from './BookLoader';
 import { useDispatch } from 'react-redux';
 import { doAddBookAction } from '../../redux/order/orderSlice'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ViewDetail = (props) => {
     const { dataBook } = props;
@@ -61,6 +61,22 @@ const ViewDetail = (props) => {
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
             <div className='view-detail-book' style={{ maxWidth: 1440, margin: '0 auto', minHeight: "calc(100vh - 150px)" }}>
+                <Breadcrumb
+                    style={{ margin: '5px 0' }}
+                    items={[
+                        {
+                            // href: '#',
+                            title: <HomeOutlined />,
+                        },
+                        {
+                            title: (
+                                <Link to={'/'}>
+                                    <span>Trang Chủ</span>
+                                </Link>
+                            ),
+                        }
+                    ]}
+                />
                 <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
                     {dataBook && dataBook._id ?
                         <Row gutter={[20, 20]}>
