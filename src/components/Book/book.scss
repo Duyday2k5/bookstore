@@ -5,6 +5,11 @@
     .original-image,
     .thumbnail-image {
         cursor: pointer;
+
+    }
+
+    .image-gallery-image {
+        max-height: calc(100vh - 300px) !important;
     }
 
     .title {
