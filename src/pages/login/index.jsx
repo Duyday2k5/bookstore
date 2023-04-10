@@ -81,6 +81,10 @@ const LoginPage = () => {
                                     <Link to='/register' > Đăng Ký </Link>
                                 </span>
                             </p>
+                            <br />
+                            <p className="text" style={{ color: "#9d9d9d" }}>
+                                p/s: Để test, sử dụng tài khoản guest@gmail.com/123456
+                            </p>
                         </Form>
                     </section>
                 </div>
