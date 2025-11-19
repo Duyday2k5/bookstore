@@ -21,6 +21,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import './styles/reset.scss';
 import './styles/global.scss';
+import './pages/admin/admin.scss';
+import './pages/admin/manage-page.scss';
 import ManageUserPage from './pages/admin/user';
 import ManageBookPage from './pages/admin/book';
 import OrderPage from './pages/order';

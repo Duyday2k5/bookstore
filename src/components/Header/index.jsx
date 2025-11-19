@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { FaReact } from 'react-icons/fa'
+
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
 import { Divider, Badge, Drawer, message, Avatar, Popover, Empty } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Space } from 'antd';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { Dropdown } from 'antd';
 import { useNavigate } from 'react-router';
 import { callLogout } from '../../services/api';
 import './header.scss';
@@ -89,63 +89,94 @@ const Header = (props) => {
             </div>
         )
     }
+    const handleSearchClick = () => {
+        if (typeof props?.onSearch === 'function') {
+            props.onSearch();
+        }
+    }
+
     return (
         <>
-            <div className='header-container'>
-                <header className="page-header">
-                    <div className="page-header__top">
-                        <div className="page-header__toggle" onClick={() => {
-                            setOpenDrawer(true)
-                        }}>☰</div>
-                        <div className='page-header__logo'>
-                            <span className='logo'>
-                                <span onClick={() => navigate('/')}> <FaReact className='rotate icon-react' />Hỏi Dân !T</span>
+            <div className='header-wrapper'>
+                <header className="header">
+                    <div className='header__inner'>
+                        <button
+                            className='header__toggle'
+                            aria-label="Mở menu"
+                            onClick={() => setOpenDrawer(true)}
+                        >
+                            ☰
+                        </button>
 
-                                <VscSearchFuzzy className='icon-search' />
-                            </span>
+                        <div className='header__logo' onClick={() => navigate('/')}>
+                            <img src='/book.jpg' alt='Logo BookStore' className='header__logo-image' />
+                            <div className='header__logo-text'>
+                                <span className='header__logo-title'>BookStore</span>
+                                <span className='header__logo-subtitle'>Chợ sách mỗi ngày</span>
+                            </div>
+                        </div>
+
+                        <div className='header__search'>
+                            <VscSearchFuzzy className='header__search-icon' />
                             <input
-                                className="input-search" type={'text'}
-                                placeholder="Bạn tìm gì hôm nay"
+                                className="header__search-input"
+                                type={'text'}
+                                placeholder="Bạn tìm sách gì hôm nay?"
                                 value={props.searchTerm}
                                 onChange={(e) => props.setSearchTerm(e.target.value)}
                             />
+                            <button
+                                className='header__search-btn'
+                                type='button'
+                                onClick={handleSearchClick}
+                            >
+                                Tìm kiếm
+                            </button>
                         </div>
 
-                    </div>
-                    <nav className="page-header__bottom">
-                        <ul id="navigation" className="navigation">
-                            <li className="navigation__item">
-                                <Popover
-                                    className="popover-carts"
-                                    placement="topRight"
-                                    rootClassName="popover-carts"
-                                    title={"Sản phẩm mới thêm"}
-                                    content={contentPopover}
-                                    arrow={true}>
-                                    <Badge
-                                        count={carts?.length ?? 0}
-                                        size={"small"}
-                                        showZero
-                                    >
-                                        <FiShoppingCart className='icon-cart' />
-                                    </Badge>
-                                </Popover>
-                            </li>
-                            <li className="navigation__item mobile"><Divider type='vertical' /></li>
-                            <li className="navigation__item mobile">
+                        <div className='header__actions'>
+                            <Popover
+                                className="popover-carts"
+                                placement="topRight"
+                                rootClassName="popover-carts"
+                                title={"Sản phẩm mới thêm"}
+                                content={contentPopover}
+                                arrow={true}>
+                                <Badge
+                                    count={carts?.length ?? 0}
+                                    size={"small"}
+                                    showZero
+                                >
+                                    <span className='header__action header__action--cart'>
+                                        <FiShoppingCart />
+                                    </span>
+                                </Badge>
+                            </Popover>
+
+                            <Divider type='vertical' className='header__divider' />
+
+                            <div className='header__account'>
                                 {!isAuthenticated ?
-                                    <span onClick={() => navigate('/login')}> Tài Khoản</span>
+                                    <button
+                                        className='header__action header__action--account'
+                                        type='button'
+                                        onClick={() => navigate('/login')}
+                                    >
+                                        <Avatar size={32} icon={<UserOutlined />} />
+                                        <span className='header__account-label'>Tài khoản</span>
+                                    </button>
                                     :
                                     <Dropdown menu={{ items }} trigger={['click']}>
-                                        <Space >
-                                            <Avatar src={urlAvatar} />
-                                            {user?.fullName}
-                                        </Space>
+                                        <button className='header__user' type='button'>
+                                            <Avatar src={urlAvatar} size={32} />
+                                            <span className='header__account-name'>{user?.fullName}</span>
+                                            <DownOutlined className='header__account-caret' />
+                                        </button>
                                     </Dropdown>
                                 }
-                            </li>
-                        </ul>
-                    </nav>
+                            </div>
+                        </div>
+                    </div>
                 </header>
             </div>
             <Drawer

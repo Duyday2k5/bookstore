@@ -71,6 +71,25 @@ const RegisterPage = () => {
                             </Form.Item>
                             <Form.Item
                                 labelCol={{ span: 24 }} //whole column
+                                label="Xác nhận mật khẩu"
+                                name="confirmPassword"
+                                dependencies={['password']}
+                                rules={[
+                                    { required: true, message: 'Vui lòng xác nhận mật khẩu!' },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            if (!value || getFieldValue('password') === value) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject(new Error('Mật khẩu xác nhận không khớp!'));
+                                        },
+                                    }),
+                                ]}
+                            >
+                                <Input.Password />
+                            </Form.Item>
+                            <Form.Item
+                                labelCol={{ span: 24 }} //whole column
                                 label="Số điện thoại"
                                 name="phone"
                                 rules={[{ required: true, message: 'Số điện thoại không được để trống!' }]}
@@ -82,10 +101,10 @@ const RegisterPage = () => {
                             // wrapperCol={{ offset: 6, span: 16 }}
                             >
                                 <Button type="primary" htmlType="submit" loading={isSubmit}>
-                                    Đăng ký
+                                    Đăng ký tài khoản
                                 </Button>
                             </Form.Item>
-                            <Divider>Or</Divider>
+                            <Divider>Hoặc</Divider>
                             <p className="text text-normal">Đã có tài khoản ?
                                 <span>
                                     <Link to='/login' > Đăng Nhập </Link>

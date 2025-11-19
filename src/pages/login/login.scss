@@ -186,3 +186,57 @@
         }
     }
 }
+
+// enhanced visual treatment for a more prominent login UI
+.login-page {
+    background: radial-gradient(1200px 600px at 10% -10%, #e8f0ff 20%, rgba(255,255,255,0) 60%),
+        radial-gradient(900px 500px at 110% 10%, #ffe9f0 10%, rgba(255,255,255,0) 50%),
+        var(--color-light);
+    .main {
+        .wrapper {
+            max-width: 28rem;
+            margin: 3rem auto;
+            padding: 2rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(2, 28, 71, 0.12);
+            .heading {
+                .text-large {
+                    font-size: 2rem;
+                    font-weight: 800;
+                    letter-spacing: 0.3px;
+                }
+            }
+
+            // Ant overrides
+            :where(.ant-input, .ant-input-password) {
+                border-radius: 12px;
+                padding: 8px 12px;
+            }
+            :where(.ant-input:focus, .ant-input-focused, .ant-input-password .ant-input:focus) {
+                box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+                border-color: #1a73e8;
+            }
+            :where(.ant-btn-primary) {
+                height: 44px;
+                border-radius: 999px;
+                padding: 0 22px;
+                font-weight: 600;
+                background: linear-gradient(135deg, #1a73e8 0%, #0b5cd6 100%);
+                width: 100%;
+            }
+            :where(.ant-divider-inner-text) {
+                font-weight: 600;
+                color: #6b7280;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main {
+            .wrapper {
+                margin: 1.5rem auto;
+                padding: 1.25rem 1rem;
+            }
+        }
+    }
+}

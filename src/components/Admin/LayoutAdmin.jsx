@@ -1,37 +1,33 @@
 import React, { useState } from 'react';
 import {
-    AppstoreOutlined,
-    ExceptionOutlined,
-    HeartTwoTone,
-    TeamOutlined,
+    DashboardOutlined,
+    BookOutlined,
+    ShoppingCartOutlined,
     UserOutlined,
-    DollarCircleOutlined,
+    LogoutOutlined,
+    SettingOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    DownOutlined,
+    HomeOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Space, message, Avatar } from 'antd';
+import { Layout, Menu, Dropdown, Space, message, Avatar, Button } from 'antd';
 import { Outlet, useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './layout.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { callLogout } from '../../services/api';
 import { doLogoutAction } from '../../redux/account/accountSlice';
 import ManageAccount from '../Account/ManageAccount';
 
-const { Content, Footer, Sider } = Layout;
-
-
+const { Content, Sider } = Layout;
 
 const LayoutAdmin = () => {
     const [collapsed, setCollapsed] = useState(false);
-    const [activeMenu, setActiveMenu] = useState('dashboard');
-    const user = useSelector(state => state.account.user);
-
     const [showManageAccount, setShowManageAccount] = useState(false);
-
+    const user = useSelector(state => state.account.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const handleLogout = async () => {
         const res = await callLogout();
@@ -42,109 +38,114 @@ const LayoutAdmin = () => {
         }
     }
 
-    const items = [
+    const menuItems = [
         {
             label: <Link to='/admin'>Dashboard</Link>,
-            key: 'dashboard',
-            icon: <AppstoreOutlined />
+            key: '/admin',
+            icon: <DashboardOutlined />,
         },
         {
-            label: <span>Manage Users</span>,
-            // key: 'user',
+            label: <Link to='/admin/user'>Users</Link>,
+            key: '/admin/user',
             icon: <UserOutlined />,
-            children: [
-                {
-                    label: <Link to='/admin/user'>CRUD</Link>,
-                    key: 'crud',
-                    icon: <TeamOutlined />,
-                },
-                // {
-                //     label: 'Files1',
-                //     key: 'file1',
-                //     icon: <TeamOutlined />,
-                // }
-            ]
         },
         {
-            label: <Link to='/admin/book'>Manage Books</Link>,
-            key: 'book',
-            icon: <ExceptionOutlined />
+            label: <Link to='/admin/book'>Books</Link>,
+            key: '/admin/book',
+            icon: <BookOutlined />,
         },
         {
-            label: <Link to='/admin/order'>Manage Orders</Link>,
-            key: 'order',
-            icon: <DollarCircleOutlined />
+            label: <Link to='/admin/order'>Orders</Link>,
+            key: '/admin/order',
+            icon: <ShoppingCartOutlined />,
         },
-
     ];
-    const itemsDropdown = [
+
+    const userMenuItems = [
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => setShowManageAccount(true)}
-            >Quản lý tài khoản</label>,
+            label: <span onClick={() => setShowManageAccount(true)}>Tài khoản</span>,
             key: 'account',
+            icon: <SettingOutlined />,
         },
         {
             label: <Link to={'/'}>Trang chủ</Link>,
             key: 'home',
+            icon: <HomeOutlined />,
         },
         {
-            label: <label
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleLogout()}
-            >Đăng xuất</label>,
-            key: 'logout',
+            type: 'divider',
         },
-
+        {
+            label: <span onClick={() => handleLogout()}>Đăng xuất</span>,
+            key: 'logout',
+            icon: <LogoutOutlined />,
+            danger: true,
+        },
     ];
 
     const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${user?.avatar}`;
 
+    // Get the current key based on location
+    const getCurrentKey = () => {
+        if (location.pathname === '/admin') return '/admin';
+        if (location.pathname.includes('/admin/user')) return '/admin/user';
+        if (location.pathname.includes('/admin/book')) return '/admin/book';
+        if (location.pathname.includes('/admin/order')) return '/admin/order';
+        return '/admin';
+    }
+
     return (
         <>
-            <Layout
-                style={{ minHeight: '100vh' }}
-                className="layout-admin"
-            >
+            <Layout style={{ minHeight: '100vh' }} className="layout-admin">
                 <Sider
                     theme='light'
                     collapsible
                     collapsed={collapsed}
-                    onCollapse={(value) => setCollapsed(value)}>
-                    <div style={{ height: 32, margin: 16, textAlign: 'center' }}>
-                        Admin
+                    onCollapse={setCollapsed}
+                    width={250}
+                    collapsedWidth={80}
+                    breakpoint="lg"
+                >
+                    <div className='sidebar-logo'>
+                        <div className='logo-icon'>📚</div>
+                        {!collapsed && <div className='logo-text'>BookHub</div>}
                     </div>
                     <Menu
-                        defaultSelectedKeys={[activeMenu]}
                         mode="inline"
-                        items={items}
-                        onClick={(e) => setActiveMenu(e.key)}
+                        selectedKeys={[getCurrentKey()]}
+                        items={menuItems}
                     />
                 </Sider>
-                <Layout>
+
+                <Layout className='main-layout'>
                     <div className='admin-header'>
-                        <span>
-                            {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                                className: 'trigger',
-                                onClick: () => setCollapsed(!collapsed),
-                            })}
-                        </span>
-                        <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                            <Space style={{ cursor: "pointer" }}>
-                                <Avatar src={urlAvatar} />
-                                {user?.fullName}
-                            </Space>
-                        </Dropdown>
+                        <div className='header-left'>
+                            <Button
+                                type="text"
+                                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                                onClick={() => setCollapsed(!collapsed)}
+                                className='menu-trigger'
+                            />
+                        </div>
+                        <div className='header-right'>
+                            <Dropdown menu={{ items: userMenuItems }} trigger={['click']}>
+                                <Space style={{ cursor: "pointer" }} className='user-space'>
+                                    <Avatar src={urlAvatar} size="large" />
+                                    <div className='user-info'>
+                                        <div className='user-name'>{user?.fullName}</div>
+                                        <div className='user-role'>Administrator</div>
+                                    </div>
+                                </Space>
+                            </Dropdown>
+                        </div>
                     </div>
-                    <Content style={{ padding: '15px' }}>
+
+                    <Content className='admin-content'>
                         <Outlet />
                     </Content>
-                    {/* <Footer style={{ padding: 0 }}>
-                    React Test Fresher &copy; Hỏi Dân IT - Made with <HeartTwoTone />
-                </Footer> */}
                 </Layout>
             </Layout>
+
             <ManageAccount
                 isModalOpen={showManageAccount}
                 setIsModalOpen={setShowManageAccount}

@@ -12,7 +12,7 @@ const Home = () => {
 
     const [listBook, setListBook] = useState([]);
     const [current, setCurrent] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
+    const [pageSize, setPageSize] = useState(8);
     const [total, setTotal] = useState(0);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +23,22 @@ const Home = () => {
 
     const [form] = Form.useForm();
     const navigate = useNavigate();
+
+    // Color palette cho cards
+    const cardColors = [
+        '#667eea', // xanh dương
+        '#f56a6a', // đỏ
+        '#ffa940', // cam
+        '#1abc9c', // xanh lá
+        '#c771d1', // tím
+        '#2c3e50', // xanh đen
+        '#16a085', // xanh ngọc
+        '#e67e22', // cam đỏ
+    ];
+
+    const getCardColor = (index) => {
+        return cardColors[index % cardColors.length];
+    };
 
     useEffect(() => {
         const initCategory = async () => {
@@ -104,26 +120,22 @@ const Home = () => {
         }
     }
 
-    const items = [
+    const sortOptions = [
         {
             key: "sort=-sold",
-            label: `Phổ biến`,
-            children: <></>,
+            label: "Phổ Biến",
         },
         {
             key: 'sort=-updatedAt',
-            label: `Hàng Mới`,
-            children: <></>,
+            label: "Hàng Mới",
         },
         {
             key: 'sort=price',
-            label: `Giá Thấp Đến Cao`,
-            children: <></>,
+            label: "Giá Thấp",
         },
         {
             key: 'sort=-price',
-            label: `Giá Cao Đến Thấp`,
-            children: <></>,
+            label: "Giá Cao",
         },
     ];
 
@@ -303,13 +315,30 @@ const Home = () => {
                         <Col md={20} xs={24} >
                             <Spin spinning={isLoading} tip="Loading...">
                                 <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
+                                    <div className="books-header-bar">
+                                        <div className="books-header-bar__title">
+                                            Tất Cả Sách
+                                        </div>
+                                        <div className="books-header-bar__sort">
+                                            <div className="books-header-bar__sort-label">Sắp xếp theo:</div>
+                                            <div className="books-header-bar__sort-group">
+                                                {sortOptions.map(option => (
+                                                    <button
+                                                        key={option.key}
+                                                        type="button"
+                                                        className={`sort-pill ${sortQuery === option.key ? 'sort-pill--active' : ''}`}
+                                                        onClick={() => {
+                                                            setSortQuery(option.key);
+                                                            setCurrent(1);
+                                                        }}
+                                                    >
+                                                        {option.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <Row >
-                                        <Tabs
-                                            defaultActiveKey="sort=-sold"
-                                            items={items}
-                                            onChange={(value) => { setSortQuery(value) }}
-                                            style={{ overflowX: "auto" }}
-                                        />
                                         <Col xs={24} md={0}>
                                             <div style={{ marginBottom: 20 }} >
                                                 <span onClick={() => setShowMobileFilter(true)}>
@@ -323,11 +352,13 @@ const Home = () => {
                                     </Row>
                                     <Row className='customize-row'>
                                         {listBook?.map((item, index) => {
+                                            const bgColor = getCardColor(index);
                                             return (
                                                 <div className="column" key={`book-${index}`} onClick={() => handleRedirectBook(item)}>
                                                     <div className='wrapper'>
-                                                        <div className='thumbnail'>
+                                                        <div className='thumbnail' style={{ backgroundColor: bgColor }}>
                                                             <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${item.thumbnail}`} alt="thumbnail book" />
+                                                            <div className='category-badge'>{item.category}</div>
                                                         </div>
                                                         <div className='text' title={item.mainText}>{item.mainText}</div>
                                                         <div className='price'>
