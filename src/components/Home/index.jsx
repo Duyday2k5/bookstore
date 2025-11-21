@@ -1,5 +1,5 @@
-import { FilterTwoTone, ReloadOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
-import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pagination, Spin, Empty, Breadcrumb } from 'antd';
+import { FilterTwoTone, HomeOutlined, UserOutlined, CaretUpOutlined } from '@ant-design/icons';
+import { Row, Col, Form, Checkbox, InputNumber, Button, Rate, Pagination, Spin, Empty, Breadcrumb } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { callFetchCategory, callFetchListBook } from '../../services/api';
@@ -208,106 +208,112 @@ const Home = () => {
                     />
                     <Row gutter={[20, 20]}>
                         <Col md={4} sm={0} xs={0}>
-                            <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
-                                <div style={{ display: 'flex', justifyContent: "space-between" }}>
-                                    <span> <FilterTwoTone />
-                                        <span style={{ fontWeight: 500 }}> Bộ lọc tìm kiếm</span>
-                                    </span>
-                                    <ReloadOutlined title="Reset" onClick={() => {
-                                        form.resetFields();
-                                        setFilter('');
-                                        setSearchTerm('');
-                                    }}
-                                    />
+                            <div className="filter-panel">
+                                <div className="filter-panel__header">
+                                    <div className="filter-panel__title">
+                                        <FilterTwoTone twoToneColor="#7c4dff" />
+                                        <span>Bộ Lọc Tìm Kiếm</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="filter-panel__clear"
+                                        onClick={() => {
+                                            form.resetFields();
+                        setFilter('');
+                        setSearchTerm('');
+                                        }}
+                                    >
+                                        Xóa bộ lọc
+                                    </button>
                                 </div>
-                                <Divider />
                                 <Form
+                                    layout="vertical"
+                                    className="filter-panel__form"
                                     onFinish={onFinish}
                                     form={form}
                                     onValuesChange={(changedValues, values) => handleChangeFilter(changedValues, values)}
                                 >
-                                    <Form.Item
-                                        name="category"
-                                        label="Danh mục sản phẩm"
-                                        labelCol={{ span: 24 }}
+                                    <div className="filter-section">
+                                        <div className="filter-section__title">
+                                            <span>Danh Mục</span>
+                                            <CaretUpOutlined />
+                                        </div>
+                                        <Form.Item
+                                            name="category"
+                                            className="filter-section__body"
+                                        >
+                                            <Checkbox.Group className="filter-checkbox-group">
+                                                <Row>
+                                                    {listCategory?.map((item, index) => {
+                                                        return (
+                                                            <Col span={24} key={`index-${index}`} className='filter-checkbox-group__item'>
+                                                                <Checkbox value={item.value} >
+                                                                    {item.label}
+                                                                </Checkbox>
+                                                            </Col>
+                                                        )
+                                                    })}
+                                                </Row>
+                                            </Checkbox.Group>
+                                        </Form.Item>
+                                    </div>
+
+                                    <div className="filter-section">
+                                        <div className="filter-section__title">
+                                            <span>Khoảng Giá</span>
+                                            <CaretUpOutlined />
+                                        </div>
+                                        <Form.Item className="filter-section__body">
+                                            <div className="filter-range">
+                                                <div className="filter-range__input">
+                                                    <label>Từ</label>
+                                                    <Form.Item name={["range", 'from']} noStyle>
+                                                        <InputNumber
+                                                            min={0}
+                                                            placeholder="0"
+                                                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                            style={{ width: '100%' }}
+                                                        />
+                                                    </Form.Item>
+                                                </div>
+                                                <span className="filter-range__dash"></span>
+                                                <div className="filter-range__input">
+                                                    <label>Đến</label>
+                                                    <Form.Item name={["range", 'to']} noStyle>
+                                                        <InputNumber
+                                                            min={0}
+                                                            placeholder="500000"
+                                                            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                            style={{ width: '100%' }}
+                                                        />
+                                                    </Form.Item>
+                                                </div>
+                                            </div>
+                                        </Form.Item>
+                                    </div>
+
+                                    <div className="filter-section">
+                                        <div className="filter-section__title">
+                                            <span>Đánh Giá</span>
+                                            <CaretUpOutlined />
+                                        </div>
+                                        <Form.Item className="filter-section__body filter-rating">
+                                            {[5, 4, 3, 2, 1].map((star) => (
+                                                <div className="filter-rating__row" key={`star-${star}`}>
+                                                    <Rate value={star} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
+                                                    <span>trở lên</span>
+                                                </div>
+                                            ))}
+                                        </Form.Item>
+                                    </div>
+
+                                    <Button
+                                        htmlType="submit"
+                                        className='filter-panel__apply'
+                                        block
                                     >
-                                        <Checkbox.Group>
-                                            <Row>
-                                                {listCategory?.map((item, index) => {
-                                                    return (
-                                                        <Col span={24} key={`index-${index}`} style={{ padding: '7px 0' }}>
-                                                            <Checkbox value={item.value} >
-                                                                {item.label}
-                                                            </Checkbox>
-                                                        </Col>
-                                                    )
-                                                })}
-                                            </Row>
-                                        </Checkbox.Group>
-                                    </Form.Item>
-                                    <Divider />
-                                    <Form.Item
-                                        label="Khoảng giá"
-                                        labelCol={{ span: 24 }}
-                                    >
-                                        <Row gutter={[10, 10]} style={{ width: "100%" }}>
-                                            <Col xl={11} md={24}>
-                                                <Form.Item name={["range", 'from']}>
-                                                    <InputNumber
-                                                        name='from'
-                                                        min={0}
-                                                        placeholder="đ TỪ"
-                                                        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                        style={{ width: '100%' }}
-                                                    />
-                                                </Form.Item>
-                                            </Col>
-                                            <Col xl={2} md={0}>
-                                                <div > - </div>
-                                            </Col>
-                                            <Col xl={11} md={24}>
-                                                <Form.Item name={["range", 'to']}>
-                                                    <InputNumber
-                                                        name='to'
-                                                        min={0}
-                                                        placeholder="đ ĐẾN"
-                                                        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                                        style={{ width: '100%' }}
-                                                    />
-                                                </Form.Item>
-                                            </Col>
-                                        </Row>
-                                        <div>
-                                            <Button onClick={() => form.submit()}
-                                                style={{ width: "100%" }} type='primary'>Áp dụng</Button>
-                                        </div>
-                                    </Form.Item>
-                                    <Divider />
-                                    <Form.Item
-                                        label="Đánh giá"
-                                        labelCol={{ span: 24 }}
-                                    >
-                                        <div>
-                                            <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text"></span>
-                                        </div>
-                                        <div>
-                                            <Rate value={4} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                        <div>
-                                            <Rate value={3} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                        <div>
-                                            <Rate value={2} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                        <div>
-                                            <Rate value={1} disabled style={{ color: '#ffce3d', fontSize: 15 }} />
-                                            <span className="ant-rate-text">trở lên</span>
-                                        </div>
-                                    </Form.Item>
+                                        Áp Dụng Bộ Lọc
+                                    </Button>
                                 </Form>
                             </div>
                         </Col>
