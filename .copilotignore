@@ -1,0 +1,23 @@
+# --- Các file cấu hình môi trường & Bí mật (QUAN TRỌNG NHẤT) ---
+.env
+.env.*
+*.pem
+*.key
+*.cert
+secrets.json
+
+# --- Các thư mục hoặc file dữ liệu nhạy cảm ---
+# Chặn thư mục chứa dữ liệu khách hàng hoặc database local
+db_dump/
+fixtures/
+private-data/
+
+# --- Các file tạm hoặc Log (để tránh làm nhiễu ngữ cảnh AI) ---
+*.log
+coverage/
+build/
+dist/
+node_modules/
+
+# --- Các file code chứa thuật toán độc quyền (nếu có) ---
+src/core/proprietary-algo.js

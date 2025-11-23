@@ -11,7 +11,8 @@ const initialState = {
         avatar: "",
         id: ""
     },
-    tempAvatar: ""
+    tempAvatar: "",
+    rememberMe: false
 };
 
 
@@ -59,6 +60,10 @@ export const accountSlide = createSlice({
 
         doUploadAvatarAction: (state, action) => {
             state.tempAvatar = action.payload.avatar
+        },
+
+        doSetRememberMe: (state, action) => {
+            state.rememberMe = action.payload;
         }
 
     },
@@ -72,7 +77,8 @@ export const accountSlide = createSlice({
 export const {
     doLoginAction,
     doGetAccountAction, doLogoutAction,
-    doUpdateUserInfoAction, doUploadAvatarAction
+    doUpdateUserInfoAction, doUploadAvatarAction,
+    doSetRememberMe
 } = accountSlide.actions;
 
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Row, Col, Popconfirm, Button, message, notification } from 'antd';
-import { callFetchListOrder } from '../../../services/api';
+import { Table, Row, Col, Popconfirm, Button, message, notification, Select, Space } from 'antd';
+import { callFetchListOrder, callUpdateOrderStatus } from '../../../services/api';
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import moment from 'moment/moment';
 import { FORMAT_DATE_DISPLAY } from '../../../utils/constant';
@@ -14,8 +14,13 @@ const MangeOrder = () => {
     const [total, setTotal] = useState(0);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isUpdatingStatus, setIsUpdatingStatus] = useState({});
     const [filter, setFilter] = useState("");
     const [sortQuery, setSortQuery] = useState("sort=-createdAt");
+
+    const STATUS_OPTIONS = [
+        { label: 'Đã hoàn thành', value: 'completed' },
+    ];
 
     useEffect(() => {
         fetchOrder();
@@ -79,6 +84,22 @@ const MangeOrder = () => {
             sorter: true
         },
         {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            render: (text, record, index) => {
+                return (
+                    <Select
+                        value={record.status || 'completed'}
+                        options={STATUS_OPTIONS}
+                        style={{ width: '150px' }}
+                        loading={isUpdatingStatus[record._id]}
+                        onChange={(value) => handleUpdateStatus(record._id, value)}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                )
+            }
+        },
+        {
             title: 'Ngày cập nhật',
             dataIndex: 'updatedAt',
             sorter: true,
@@ -128,6 +149,33 @@ const MangeOrder = () => {
 
     const handleSearch = (query) => {
         setFilter(query);
+    }
+
+    const handleUpdateStatus = async (orderId, newStatus) => {
+        setIsUpdatingStatus(prev => ({ ...prev, [orderId]: true }));
+
+        try {
+            const res = await callUpdateOrderStatus(orderId, newStatus);
+            if (res && res.data) {
+                message.success('Cập nhật trạng thái đơn hàng thành công!');
+                // Update local state
+                setListOrder(listOrder.map(order =>
+                    order._id === orderId ? { ...order, status: newStatus } : order
+                ));
+            } else {
+                notification.error({
+                    message: "Cập nhật thất bại",
+                    description: res.message || "Không thể cập nhật trạng thái đơn hàng"
+                });
+            }
+        } catch (error) {
+            notification.error({
+                message: "Có lỗi xảy ra",
+                description: error.message || "Vui lòng thử lại"
+            });
+        } finally {
+            setIsUpdatingStatus(prev => ({ ...prev, [orderId]: false }));
+        }
     }
 
 

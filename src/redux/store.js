@@ -2,6 +2,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../redux/counter/counterSlice';
 import accountReducer from '../redux/account/accountSlice';
 import orderReducer from '../redux/order/orderSlice';
+import discountReducer from '../redux/discount/discountSlice';
+import addressReducer from '../redux/address/addressSlice';
 
 import {
   persistStore,
@@ -25,7 +27,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   counter: counterReducer,
   account: accountReducer,
-  order: orderReducer
+  order: orderReducer,
+  discount: discountReducer,
+  address: addressReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

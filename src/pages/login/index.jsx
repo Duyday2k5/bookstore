@@ -1,25 +1,43 @@
-import { Button, Divider, Form, Input, message, notification } from 'antd';
+import { Button, Divider, Form, Input, message, notification, Checkbox } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { callLogin } from '../../services/api';
 import './login.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { doLoginAction } from '../../redux/account/accountSlice';
+import { doLoginAction, doSetRememberMe } from '../../redux/account/accountSlice';
 
 const LoginPage = () => {
     const navigate = useNavigate();
     const [isSubmit, setIsSubmit] = useState(false);
-
+    const [form] = Form.useForm();
     const dispatch = useDispatch();
 
-    const onFinish = async (values) => {
+    // Auto-fill email nếu có lưu từ lần trước
+    useEffect(() => {
+        const savedEmail = localStorage.getItem('remembered_email');
+        if (savedEmail) {
+            form.setFieldsValue({ username: savedEmail });
+        }
+    }, [form]);
 
-        const { username, password } = values;
+    const onFinish = async (values) => {
+        const { username, password, rememberMe } = values;
+
         setIsSubmit(true);
         const res = await callLogin(username, password);
         setIsSubmit(false);
         if (res?.data) {
             localStorage.setItem('access_token', res.data.access_token);
+
+            // Lưu email nếu user check "Ghi nhớ tôi"
+            if (rememberMe) {
+                localStorage.setItem('remembered_email', username);
+                dispatch(doSetRememberMe(true));
+            } else {
+                localStorage.removeItem('remembered_email');
+                dispatch(doSetRememberMe(false));
+            }
+
             dispatch(doLoginAction(res.data.user))
             message.success('Đăng nhập tài khoản thành công!');
             navigate('/')
@@ -45,8 +63,8 @@ const LoginPage = () => {
 
                         </div>
                         <Form
+                            form={form}
                             name="basic"
-                            // style={{ maxWidth: 600, margin: '0 auto' }}
                             onFinish={onFinish}
                             autoComplete="off"
                         >
@@ -69,8 +87,14 @@ const LoginPage = () => {
                             </Form.Item>
 
                             <Form.Item
-                            // wrapperCol={{ offset: 6, span: 16 }}
+                                name="rememberMe"
+                                valuePropName="checked"
+                                initialValue={false}
                             >
+                                <Checkbox>Ghi nhớ tôi</Checkbox>
+                            </Form.Item>
+
+                            <Form.Item>
                                 <Button type="primary" htmlType="submit" loading={isSubmit}>
                                     Đăng nhập
                                 </Button>

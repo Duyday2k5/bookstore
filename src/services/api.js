@@ -125,3 +125,11 @@ export const callFetchDashboard = () => {
 export const callFetchListOrder = (query) => {
     return axios.get(`/api/v1/order?${query}`)
 }
+
+export const callValidateDiscountCode = async (code, orderTotal) => {
+    return axios.post('/api/v1/discount/validate', { code, orderTotal });
+}
+
+export const callUpdateOrderStatus = (orderId, status) => {
+    return axios.put(`/api/v1/order/${orderId}`, { status })
+}

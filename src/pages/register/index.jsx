@@ -10,6 +10,7 @@ const RegisterPage = () => {
 
     const onFinish = async (values) => {
         const { fullName, email, password, phone } = values;
+
         setIsSubmit(true);
         const res = await callRegister(fullName, email, password, phone);
         setIsSubmit(false);

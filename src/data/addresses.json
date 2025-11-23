@@ -1,0 +1,148 @@
+{
+    "provinces": [
+        {
+            "id": 1,
+            "name": "Hà Nội"
+        },
+        {
+            "id": 2,
+            "name": "TP Hồ Chí Minh"
+        },
+        {
+            "id": 3,
+            "name": "Hải Phòng"
+        },
+        {
+            "id": 4,
+            "name": "Đà Nẵng"
+        },
+        {
+            "id": 5,
+            "name": "An Giang"
+        },
+        {
+            "id": 6,
+            "name": "Bà Rịa - Vũng Tàu"
+        },
+        {
+            "id": 7,
+            "name": "Bắc Giang"
+        },
+        {
+            "id": 8,
+            "name": "Bắc Kạn"
+        },
+        {
+            "id": 9,
+            "name": "Bạc Liêu"
+        },
+        {
+            "id": 10,
+            "name": "Bắc Ninh"
+        }
+    ],
+    "districts": {
+        "1": [
+            {
+                "id": 1,
+                "name": "Ba Đình"
+            },
+            {
+                "id": 2,
+                "name": "Bắc Tử Liêm"
+            },
+            {
+                "id": 3,
+                "name": "Cầu Giấy"
+            },
+            {
+                "id": 4,
+                "name": "Chương Mỹ"
+            },
+            {
+                "id": 5,
+                "name": "Đan Phượng"
+            }
+        ],
+        "2": [
+            {
+                "id": 1,
+                "name": "Quận 1"
+            },
+            {
+                "id": 2,
+                "name": "Quận 2"
+            },
+            {
+                "id": 3,
+                "name": "Quận 3"
+            },
+            {
+                "id": 4,
+                "name": "Quận 4"
+            },
+            {
+                "id": 5,
+                "name": "Quận 5"
+            }
+        ]
+    },
+    "wards": {
+        "1_1": [
+            {
+                "id": 1,
+                "name": "Phường Phúc Tân"
+            },
+            {
+                "id": 2,
+                "name": "Phường Tràng Tiền"
+            },
+            {
+                "id": 3,
+                "name": "Phường Cửa Nam"
+            }
+        ],
+        "1_2": [
+            {
+                "id": 1,
+                "name": "Phường Bắc Tử Liêm"
+            },
+            {
+                "id": 2,
+                "name": "Phường Cổ Nhuế 1"
+            },
+            {
+                "id": 3,
+                "name": "Phường Cổ Nhuế 2"
+            }
+        ],
+        "2_1": [
+            {
+                "id": 1,
+                "name": "Phường Bến Nghé"
+            },
+            {
+                "id": 2,
+                "name": "Phường Bến Thành"
+            },
+            {
+                "id": 3,
+                "name": "Phường Cô Giang"
+            }
+        ],
+        "2_2": [
+            {
+                "id": 1,
+                "name": "Phường An Khánh"
+            },
+            {
+                "id": 2,
+                "name": "Phường Hiệp Phú"
+            },
+            {
+                "id": 3,
+                "name": "Phường Tân Hưng"
+            }
+        ]
+    }
+}
