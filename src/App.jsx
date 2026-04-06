@@ -28,6 +28,8 @@ import ManageBookPage from './pages/admin/book';
 import OrderPage from './pages/order';
 import HistoryPage from './pages/history';
 import AdminOrderPage from './pages/admin/order';
+import LoginModal from './components/Auth/LoginModal';
+import RegisterModal from './components/Auth/RegisterModal';
 
 const Layout = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -155,7 +157,11 @@ export default function App() {
           || window.location.pathname === '/'
           || window.location.pathname.startsWith('/book')
           ?
-          <RouterProvider router={router} />
+          <>
+            <RouterProvider router={router} />
+            <LoginModal />
+            <RegisterModal />
+          </>
           :
           <Loading />
       }

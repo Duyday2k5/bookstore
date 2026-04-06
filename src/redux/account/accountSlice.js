@@ -12,7 +12,9 @@ const initialState = {
         id: ""
     },
     tempAvatar: "",
-    rememberMe: false
+    rememberMe: false,
+    showLoginModal: false,
+    showRegisterModal: false
 };
 
 
@@ -64,6 +66,22 @@ export const accountSlide = createSlice({
 
         doSetRememberMe: (state, action) => {
             state.rememberMe = action.payload;
+        },
+
+        doShowLoginModal: (state, action) => {
+            state.showLoginModal = true;
+        },
+
+        doHideLoginModal: (state, action) => {
+            state.showLoginModal = false;
+        },
+
+        doShowRegisterModal: (state, action) => {
+            state.showRegisterModal = true;
+        },
+
+        doHideRegisterModal: (state, action) => {
+            state.showRegisterModal = false;
         }
 
     },
@@ -78,7 +96,8 @@ export const {
     doLoginAction,
     doGetAccountAction, doLogoutAction,
     doUpdateUserInfoAction, doUploadAvatarAction,
-    doSetRememberMe
+    doSetRememberMe, doShowLoginModal, doHideLoginModal,
+    doShowRegisterModal, doHideRegisterModal
 } = accountSlide.actions;
 
 

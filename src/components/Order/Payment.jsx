@@ -12,6 +12,7 @@ const { TextArea } = Input;
 
 const Payment = (props) => {
     const carts = useSelector(state => state.order.carts);
+    const selectedItems = useSelector(state => state.order.selectedItems) || [];
     const discount = useSelector(state => state.discount);
     const address = useSelector(state => state.address);
     const [totalPrice, setTotalPrice] = useState(0);
@@ -23,11 +24,13 @@ const Payment = (props) => {
     const user = useSelector(state => state.account.user);
     const [form] = Form.useForm();
 
+    // Lấy những sản phẩm được chọn
+    const selectedCarts = carts.filter(item => selectedItems.includes(item._id));
 
     useEffect(() => {
-        if (carts && carts.length > 0) {
+        if (selectedCarts && selectedCarts.length > 0) {
             let sum = 0;
-            carts.map(item => {
+            selectedCarts.forEach(item => {
                 sum += item.quantity * item.detail.price;
             })
             setTotalPrice(sum);
@@ -48,7 +51,7 @@ const Payment = (props) => {
             setTotalPrice(0);
             setDiscountedPrice(0);
         }
-    }, [carts, discount]);
+    }, [selectedCarts, discount]);
 
 
     const handlePlaceOrder = () => {
@@ -73,7 +76,7 @@ const Payment = (props) => {
         }
 
         setIsSubmit(true);
-        const detailOrder = carts.map(item => {
+        const detailOrder = selectedCarts.map(item => {
             return {
                 bookName: item.detail.mainText,
                 quantity: item.quantity,
@@ -167,7 +170,7 @@ const Payment = (props) => {
     return (
         <Row gutter={[20, 20]}>
             <Col md={16} xs={24}>
-                {carts?.map((book, index) => {
+                {selectedCarts?.map((book, index) => {
                     const currentBookPrice = book?.detail?.price ?? 0;
                     return (
                         <div className='order-book' key={`index-${index}`}>
@@ -318,10 +321,10 @@ const Payment = (props) => {
                     <Divider style={{ margin: "5px 0" }} />
                     <button
                         onClick={() => form.submit()}
-                        disabled={isSubmit}
+                        disabled={isSubmit || selectedCarts.length === 0}
                     >
                         {isSubmit && <span><LoadingOutlined /> &nbsp;</span>}
-                        Đặt Hàng ({carts?.length ?? 0})
+                        Đặt Hàng ({selectedCarts?.length ?? 0})
                     </button>
                 </div>
             </Col>

@@ -8,7 +8,8 @@ import { message } from 'antd';
  * 
  */
 const initialState = {
-    carts: [] // thông tin cart
+    carts: [], // thông tin cart
+    selectedItems: [] // mảng chứa _id của sản phẩm được chọn
 };
 
 
@@ -58,6 +59,33 @@ export const orderSlice = createSlice({
 
         doPlaceOrderAction: (state, action) => {
             state.carts = [];
+            state.selectedItems = [];
+        },
+
+        doSelectItemAction: (state, action) => {
+            const itemId = action.payload;
+            if (!state.selectedItems) {
+                state.selectedItems = [];
+            }
+            if (!state.selectedItems.includes(itemId)) {
+                state.selectedItems.push(itemId);
+            }
+        },
+
+        doDeselectItemAction: (state, action) => {
+            const itemId = action.payload;
+            if (!state.selectedItems) {
+                state.selectedItems = [];
+            }
+            state.selectedItems = state.selectedItems.filter(id => id !== itemId);
+        },
+
+        doSelectAllItemsAction: (state, action) => {
+            state.selectedItems = state.carts.map(item => item._id);
+        },
+
+        doClearAllSelectAction: (state, action) => {
+            state.selectedItems = [];
         }
 
     },
@@ -68,7 +96,7 @@ export const orderSlice = createSlice({
     },
 });
 
-export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction, doPlaceOrderAction } = orderSlice.actions;
+export const { doAddBookAction, doUpdateCartAction, doDeleteItemCartAction, doPlaceOrderAction, doSelectItemAction, doDeselectItemAction, doSelectAllItemsAction, doClearAllSelectAction } = orderSlice.actions;
 
 
 export default orderSlice.reducer;

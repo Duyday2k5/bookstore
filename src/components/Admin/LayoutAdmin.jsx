@@ -108,7 +108,7 @@ const LayoutAdmin = () => {
                 >
                     <div className='sidebar-logo'>
                         <div className='logo-icon'>📚</div>
-                        {!collapsed && <div className='logo-text'>BookHub</div>}
+                        {!collapsed && <div className='logo-text'>BookAdmin</div>}
                     </div>
                     <Menu
                         mode="inline"

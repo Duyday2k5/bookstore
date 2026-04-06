@@ -1,5 +1,5 @@
 import { Button, Divider, Form, Input, message, notification } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { callRegister } from '../../services/api';
 import './register.scss';

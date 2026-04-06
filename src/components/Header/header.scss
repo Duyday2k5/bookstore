@@ -117,7 +117,7 @@
         &__action {
             width: 44px;
             height: 44px;
-            border-radius: 50%;
+            border-radius: 12px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -125,12 +125,13 @@
             color: #fff;
             border: none;
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
+            transition: background 0.2s, transform 0.2s, border-radius 0.2s;
             font-size: 20px;
 
             &:hover {
                 background: rgba(255, 255, 255, 0.25);
                 transform: translateY(-1px);
+                border-radius: 16px;
             }
         }
 
@@ -218,22 +219,25 @@
 
         .header {
             &__toggle {
-                display: none;
+                display: inline-flex;
+                order: 1;
             }
 
             &__logo {
                 flex: 1;
+                order: 2;
+                justify-content: center;
             }
 
             &__actions {
-                width: 100%;
+                width: auto;
                 justify-content: space-between;
+                order: 3;
             }
 
             &__divider {
                 display: none;
             }
-
         }
     }
 
@@ -243,9 +247,13 @@
                 display: none;
             }
 
+            &__search {
+                padding-right: 8px;
+            }
+
             &__search-btn {
                 padding: 0 16px;
-                font-size: 14px;
+                font-size: 12px;
             }
 
             &__account-name {
@@ -265,4 +273,31 @@
             }
         }
     }
+}
+
+// Drawer menu styles
+.drawer-menu-item {
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.85);
+    transition: all 0.3s ease;
+    border-radius: 4px;
+
+    &:hover {
+        color: #ee4d2d;
+        background: rgba(238, 77, 45, 0.05);
+        padding-left: 8px;
+    }
+
+    &:active {
+        background: rgba(238, 77, 45, 0.1);
+    }
+}
+
+.header__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

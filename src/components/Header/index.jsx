@@ -9,7 +9,7 @@ import { Dropdown } from 'antd';
 import { useNavigate } from 'react-router';
 import { callLogout } from '../../services/api';
 import './header.scss';
-import { doLogoutAction } from '../../redux/account/accountSlice';
+import { doLogoutAction, doShowLoginModal, doShowRegisterModal } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
 import ManageAccount from '../Account/ManageAccount';
 
@@ -160,7 +160,7 @@ const Header = (props) => {
                                     <button
                                         className='header__action header__action--account'
                                         type='button'
-                                        onClick={() => navigate('/login')}
+                                        onClick={() => dispatch(doShowLoginModal())}
                                     >
                                         <Avatar size={32} icon={<UserOutlined />} />
                                         <span className='header__account-label'>Tài khoản</span>
@@ -185,11 +185,48 @@ const Header = (props) => {
                 onClose={() => setOpenDrawer(false)}
                 open={openDrawer}
             >
-                <p>Quản lý tài khoản</p>
+                <div className='drawer-menu-item' onClick={() => { navigate('/'); setOpenDrawer(false); }}>
+                    Trang chủ
+                </div>
                 <Divider />
 
-                <p>Đăng xuất</p>
-                <Divider />
+                {isAuthenticated ? (
+                    <>
+                        <div className='drawer-menu-item' onClick={() => { setShowManageAccount(true); setOpenDrawer(false); }}>
+                            Quản lý tài khoản
+                        </div>
+                        <Divider />
+
+                        <div className='drawer-menu-item' onClick={() => { navigate('/history'); setOpenDrawer(false); }}>
+                            Lịch sử mua hàng
+                        </div>
+                        <Divider />
+
+                        {user?.role === 'ADMIN' && (
+                            <>
+                                <div className='drawer-menu-item' onClick={() => { navigate('/admin'); setOpenDrawer(false); }}>
+                                    Trang quản trị
+                                </div>
+                                <Divider />
+                            </>
+                        )}
+
+                        <div className='drawer-menu-item' onClick={() => { handleLogout(); setOpenDrawer(false); }}>
+                            Đăng xuất
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className='drawer-menu-item' onClick={() => { dispatch(doShowLoginModal()); setOpenDrawer(false); }}>
+                            Đăng nhập
+                        </div>
+                        <Divider />
+
+                        <div className='drawer-menu-item' onClick={() => { dispatch(doShowRegisterModal()); setOpenDrawer(false); }}>
+                            Đăng ký
+                        </div>
+                    </>
+                )}
             </Drawer>
             <ManageAccount
                 isModalOpen={showManageAccount}

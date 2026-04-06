@@ -191,7 +191,7 @@ const Home = () => {
             <div style={{ background: '#efefef', padding: "20px 0" }}>
                 <div className="homepage-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
                     <Breadcrumb
-                        style={{ margin: '5px 0' }}
+                        style={{ margin: '6px 16px', fontSize: '18px' }}
                         items={[
                             {
                                 // href: '#',
@@ -219,8 +219,8 @@ const Home = () => {
                                         className="filter-panel__clear"
                                         onClick={() => {
                                             form.resetFields();
-                        setFilter('');
-                        setSearchTerm('');
+                                            setFilter('');
+                                            setSearchTerm('');
                                         }}
                                     >
                                         Xóa bộ lọc

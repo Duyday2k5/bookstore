@@ -1,25 +1,28 @@
-import { Col, Divider, Empty, InputNumber, Row } from 'antd';
+import { Col, Divider, Empty, InputNumber, Row, Checkbox } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { doDeleteItemCartAction, doUpdateCartAction } from '../../redux/order/orderSlice';
+import { doDeleteItemCartAction, doUpdateCartAction, doSelectItemAction, doDeselectItemAction, doSelectAllItemsAction, doClearAllSelectAction } from '../../redux/order/orderSlice';
 
 const ViewOrder = (props) => {
     const carts = useSelector(state => state.order.carts);
+    const selectedItems = useSelector(state => state.order.selectedItems) || [];
     const [totalPrice, setTotalPrice] = useState(0);
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (carts && carts.length > 0) {
             let sum = 0;
-            carts.map(item => {
-                sum += item.quantity * item.detail.price;
+            carts.forEach(item => {
+                if (selectedItems.includes(item._id)) {
+                    sum += item.quantity * item.detail.price;
+                }
             })
             setTotalPrice(sum);
         } else {
             setTotalPrice(0);
         }
-    }, [carts]);
+    }, [carts, selectedItems]);
 
     const handleOnChangeInput = (value, book) => {
         if (!value || value < 1) return;
@@ -28,13 +31,69 @@ const ViewOrder = (props) => {
         }
     }
 
+    const handleSelectItem = (itemId) => {
+        if (selectedItems.includes(itemId)) {
+            dispatch(doDeselectItemAction(itemId));
+        } else {
+            dispatch(doSelectItemAction(itemId));
+        }
+    }
+
+    const isAllSelected = carts.length > 0 && selectedItems.length === carts.length;
+
+    const handleSelectAll = () => {
+        if (isAllSelected) {
+            dispatch(doClearAllSelectAction());
+        } else {
+            dispatch(doSelectAllItemsAction());
+        }
+    }
+
     return (
         <Row gutter={[20, 20]}>
             <Col md={18} xs={24}>
+                {carts?.length > 0 && (
+                    <div style={{
+                        padding: '15px',
+                        backgroundColor: '#fff',
+                        borderRadius: '8px',
+                        marginBottom: '15px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '15px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+                    }}>
+                        <Checkbox
+                            checked={isAllSelected}
+                            onChange={handleSelectAll}
+                            indeterminate={selectedItems.length > 0 && selectedItems.length < carts.length}
+                        />
+                        <span style={{ fontWeight: '500' }}>
+                            {isAllSelected ? 'Bỏ chọn tất cả' : 'Chọn tất cả'} ({selectedItems.length}/{carts.length})
+                        </span>
+                    </div>
+                )}
                 {carts?.map((book, index) => {
                     const currentBookPrice = book?.detail?.price ?? 0;
+                    const isSelected = selectedItems.includes(book._id);
                     return (
-                        <div className='order-book' key={`index-${index}`}>
+                        <div
+                            className='order-book'
+                            key={`index-${index}`}
+                            style={{
+                                backgroundColor: isSelected ? '#f0f5ff' : '#fff',
+                                borderLeft: isSelected ? '4px solid #5f71ff' : 'none',
+                                transition: 'all 0.2s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px'
+                            }}
+                        >
+                            <Checkbox
+                                checked={isSelected}
+                                onChange={() => handleSelectItem(book._id)}
+                                style={{ marginLeft: '12px' }}
+                            />
                             <div className='book-content'>
                                 <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} />
                                 <div className='title'>
@@ -86,10 +145,10 @@ const ViewOrder = (props) => {
                     </div>
                     <Divider style={{ margin: "10px 0" }} />
                     <button
-                        disabled={carts.length === 0}
+                        disabled={selectedItems.length === 0}
                         onClick={() => props.setCurrentStep(1)}
                     >
-                        Mua Hàng ({carts?.length ?? 0})
+                        Mua Hàng ({selectedItems?.length ?? 0})
                     </button>
                 </div>
             </Col>
