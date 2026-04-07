@@ -133,7 +133,7 @@ const Payment = (props) => {
             return;
         }
 
-        const sanitizedCode = sanitizeInput(discountCode.trim());
+        const sanitizedCode = discountCode.trim();
         setIsValidatingCode(true);
 
         try {

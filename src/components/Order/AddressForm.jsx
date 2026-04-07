@@ -42,8 +42,7 @@ const AddressForm = () => {
     };
 
     const handleStreetChange = (e) => {
-        const value = sanitizeInput(e.target.value);
-        dispatch(doSetStreet(value));
+        dispatch(doSetStreet(e.target.value));
     };
 
     // Build full address
