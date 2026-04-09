@@ -1,9 +1,9 @@
-import { Row, Col, Rate, Divider, Button, Breadcrumb } from 'antd';
+import { Row, Col, Rate, Divider, Button, Breadcrumb, Tooltip } from 'antd';
 import './book.scss';
 import ImageGallery from 'react-image-gallery';
 import { useRef, useState } from 'react';
 import ModalGallery from './ModalGallery';
-import { MinusOutlined, PlusOutlined, HomeOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, HomeOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
 import BookLoader from './BookLoader';
 import { useDispatch } from 'react-redux';
@@ -61,22 +61,39 @@ const ViewDetail = (props) => {
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
             <div className='view-detail-book' style={{ maxWidth: 1440, margin: '0 auto', minHeight: "calc(100vh - 150px)" }}>
-                <Breadcrumb
-                    style={{ margin: '5px 0' }}
-                    items={[
-                        {
-                            // href: '#',
-                            title: <HomeOutlined />,
-                        },
-                        {
-                            title: (
-                                <Link to={'/'}>
-                                    <span>Trang Chủ</span>
-                                </Link>
-                            ),
-                        }
-                    ]}
-                />
+                <div className='detail-top-bar'>
+                    <Tooltip title="Quay lại">
+                        <button
+                            className='back-button'
+                            onClick={() => navigate(-1)}
+                            aria-label="Quay lại trang trước"
+                            style={{ margin: '0 0 6px', padding: '6px 10px', border: 'none', borderRadius: '4px', cursor: 'pointer', backgroundColor: '#6a7cff', color: '#fff' }}
+                        >
+                            <ArrowLeftOutlined />
+                            <span> Back</span>
+                        </button>
+                    </Tooltip>
+                    <Breadcrumb
+                        style={{ marginRight: '4px' }}
+                        items={[
+                            {
+                                title: <HomeOutlined />,
+                            },
+                            {
+                                title: (
+                                    <Link to={'/'}>
+                                        <span>Trang Chủ</span>
+                                    </Link>
+                                ),
+                            },
+                            {
+                                title: (
+                                    <span>{dataBook?.mainText || 'Chi tiết sách'}</span>
+                                ),
+                            }
+                        ]}
+                    />
+                </div>
                 <div style={{ padding: "20px", background: '#fff', borderRadius: 5 }}>
                     {dataBook && dataBook._id ?
                         <Row gutter={[20, 20]}>
@@ -106,7 +123,7 @@ const ViewDetail = (props) => {
                                 </Col>
                                 <Col span={24}>
                                     <div className='author'>Tác giả: <a href='#'>{dataBook?.author}</a> </div>
-                                    <div className='title'>{dataBook?.mainText}</div>
+                                    <div className='title' style={{ fontWeight: 700 }}>{dataBook?.mainText}</div>
                                     <div className='rating'>
                                         <Rate value={5} disabled style={{ color: '#ffce3d', fontSize: 12 }} />
                                         <span className='sold'>
@@ -140,6 +157,7 @@ const ViewDetail = (props) => {
                                         <button
                                             className='now'
                                             onClick={() => handleBuyNow(currentQuantity, dataBook)}
+                                            style={{ cursor: 'pointer' }}
                                         >Mua ngay</button>
                                     </div>
                                 </Col>

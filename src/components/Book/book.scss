@@ -105,13 +105,12 @@
         button {
             overflow: visible;
             outline: 0;
-            background: #ff57221a;
-            color: #ee4d2d;
-            border: 1px solid #ee4d2d;
+            background: #8da2e72e;
+            color: #6a7cff;
+            border: 1px solid #fff;
             box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .03);
             cursor: pointer;
             border-radius: 3px;
-
             font-size: 16px;
             height: 48px;
             padding: 0 20px;
@@ -121,23 +120,28 @@
                 position: relative;
                 overflow: visible;
                 outline: 0;
-                background: #ee4d2d;
+                background: linear-gradient(120deg, #6a7cff 0%, #7d55c7 65%, #8c48bf 100%);
+                border-radius: 5px;
             }
         }
 
         .cart {
             &:hover {
-                background: #ffc5b22e;
+                background: #6782dc2e;
             }
 
             span {
                 padding-left: 5px;
+                border-radius: 5px;
             }
         }
 
         .now {
             &:hover {
-                background: #f05d40;
+                // background: linear-gradient(120deg, #6a7cff 0%, #7d55c7 65%, #8c48bf 60%);
+                transition: transform 0.2s, box-shadow 0.2s;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 12px rgba(106, 124, 255, 0.4);
             }
         }
     }

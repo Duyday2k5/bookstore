@@ -79,7 +79,7 @@ const Header = (props) => {
                 </div>
                 {carts.length > 0 ?
                     <div className='pop-cart-footer'>
-                        <button onClick={() => navigate('/order')}>Xem giỏ hàng</button>
+                        <button style={{ background: 'linear-gradient(120deg, #6a7cff 0%, #7d55c7 65%, #8c48bf 100%)', borderRadius: '5px', border: 'none' }} onClick={() => navigate('/order')}>Xem giỏ hàng</button>
                     </div>
                     :
                     <Empty
@@ -124,6 +124,9 @@ const Header = (props) => {
                                 placeholder="Bạn tìm sách gì hôm nay?"
                                 value={props.searchTerm}
                                 onChange={(e) => props.setSearchTerm(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') handleSearchClick();
+                                }}
                             />
                             <button
                                 className='header__search-btn'
@@ -131,6 +134,14 @@ const Header = (props) => {
                                 onClick={handleSearchClick}
                             >
                                 Tìm kiếm
+                            </button>
+                            <button
+                                className='header__search-icon-btn'
+                                type='button'
+                                onClick={handleSearchClick}
+                                aria-label='Tìm kiếm'
+                            >
+                                <VscSearchFuzzy />
                             </button>
                         </div>
 

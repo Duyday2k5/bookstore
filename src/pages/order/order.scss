@@ -86,6 +86,24 @@
 
     }
 
+    .order-sum button {
+        background: linear-gradient(120deg, #6a7cff 0%, #7d55c7 65%, #8c48bf 100%);
+        border-radius: 5px;
+        border: none;
+    }
+
+    .order-sum .calculate .sum-final {
+        color: #6a7cff;
+        font-size: 22px;
+        font-weight: 400;
+    }
+
+    .order-sum:hover button {
+        transition: transform 0.2s, box-shadow 0.2s;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(106, 124, 255, 0.4);
+    }
+
     .order-steps {
         background: white;
         padding: 15px;
